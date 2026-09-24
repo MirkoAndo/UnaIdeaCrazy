@@ -105,9 +105,9 @@ E da lì controlli tutto.
 ╠════════════════════════════════════════════╣
 ║                                            ║
 ║  SERVERS                                   ║
-║  ├─ Server 01       ● ONLINE    23% CPU   ║
-║  ├─ Server 02       ● ONLINE    47% CPU   ║
-║  └─ Raspberry Pi    ● ONLINE    31% CPU   ║
+║  ├─ Server 01       ● ONLINE    23% CPU    ║
+║  ├─ Server 02       ● ONLINE    47% CPU    ║
+║  └─ Raspberry Pi    ● ONLINE    31% CPU    ║
 ║                                            ║
 ║  NETWORK                                   ║
 ║  ├─ Gateway         ● ONLINE               ║
@@ -150,3 +150,200 @@ E da lì controlli tutto.
                                 │
                                 ▼
                          FUTURE WEBSITE
+
+
+
+                    python main.py
+                          │
+                   ┌──────▼──────┐
+                   │ ORCHESTRATOR│
+                   └──────┬──────┘
+                          │
+          ┌───────────────┼────────────────┐
+          ▼               ▼                ▼
+     WEB SERVER          API            DATABASE
+      processo         processo         processo
+          │               │                │
+          └───────────────┼────────────────┘
+                          ▼
+                  MONITORING ENGINE
+
+
+┌──────────────────────────────────────────────┐
+│                 MISSION CONTROL              │
+└──────────────────────┬───────────────────────┘
+                       │
+                 monitoring
+                       │
+       ┌───────────────┼────────────────┐
+       ▼               ▼                ▼
+   APACHE           MYSQL/MARIADB    PYTHON API
+   Web Server       DB Server        (futura)
+       │               │                │
+       └───────────────┴────────────────┘
+              componenti reali
+
+                         ┌──────────────────────┐
+                         │       BROWSER        │
+                         └──────────┬───────────┘
+                                    │ HTTP
+                                    ▼
+                         ┌──────────────────────┐
+                         │       APACHE        │
+                         │      Web Server     │
+                         └──────────┬───────────┘
+                                    │
+                    ┌───────────────┼────────────────┐
+                    │               │                │
+                    ▼               ▼                ▼
+                 PHP APP        STATIC WEB       FILE SYSTEM
+                    │
+          ┌─────────┴─────────┐
+          │                   │
+          ▼                   ▼
+       MySQL/             CLOUD PERSONALE
+       MariaDB            upload/download
+          │
+          │
+          ▼
+      DATABASE
+
+
+              ┌─────────────────────────┐
+              │   MONITORING ENGINE     │
+              │        Python           │
+              └────────────┬────────────┘
+                           │
+                 osserva l'intero sistema
+                           │
+          ┌────────────────┼────────────────┐
+          ▼                ▼                ▼
+       Apache           MySQL           PHP/App
+       process          process         health
+
+
+                    PERSONAL CLOUD
+                          │
+          ┌───────────────┴───────────────┐
+          │                               │
+       STORAGE                       MISSION CONTROL
+          │                               │
+   upload/download                 monitoring system
+   users/permissions               health checks
+   temporary links                 alerts
+          │                               │
+          └───────────────┬───────────────┘
+                          │
+                       Apache
+                          │
+                       PHP App
+                          │
+                    MySQL/MariaDB
+
+
+Browser
+   │
+   │ richiesta file
+   ▼
+Apache
+   │
+   ▼
+PHP
+   │
+   ├── utente autenticato?
+   │
+   ├── file esiste?
+   │
+   ├── autorizzazione valida?
+   │
+   └── token temporaneo valido?
+   │
+   ▼
+Filesystem
+   │
+   └── file → Browser
+
+
+/share/a8F92kLm...
+        │
+        ▼
+      PHP
+        │
+   token valido?
+        │
+   ┌────┴────┐
+   │         │
+  YES        NO
+   │         │
+ file       403
+
+ MONITORING ENGINE
+│
+├── Apache
+│   └── processo attivo?
+│
+├── MySQL/MariaDB
+│   └── processo attivo?
+│
+├── Python components
+│   └── processo attivo?
+│
+└── System
+    ├── CPU
+    ├── RAM
+    └── Network
+
+
+┌──────────────────────────────────┐
+│        MONITORING ENGINE         │
+├──────────────────────────────────┤
+│ ogni ~3 secondi                  │
+│                                  │
+│ 1. legge stato processi          │
+│ 2. legge CPU / RAM / rete        │
+│ 3. confronta con soglie          │
+│ 4. rileva cambiamenti/anomalie   │
+│ 5. genera eventuali eventi       │
+│ 6. aggiorna lo stato corrente    │
+│                                  │
+│          ↓                       │
+│     MySQL/MariaDB                │
+│     (event log)                  │
+│          ↓                       │
+│      Dashboard                  │
+└──────────────────────────────────┘
+
+
+                    APPLICAZIONE WEB
+                           │
+                        LOGIN
+                           │
+                    ┌──────┴──────┐
+                    │             │
+                 CLOUD      MISSION CONTROL
+                    │             │
+              ┌─────┴─────┐   ┌───┴────────────┐
+              │           │   │                │
+           FILES       SHARING STATUS       SYSTEM
+              │           │   │                │
+           upload      temp link │         CPU / RAM
+           download             │         NETWORK
+           delete               │
+                                │
+                         Apache / MariaDB /
+                         Python processes
+
+                         START MYSQL
+     │
+     ▼
+avvio processo
+     │
+     ▼
+Mission Control cerca il PID
+     │
+   ┌─┴──────────┐
+   │            │
+ TROVATO      NON TROVATO
+   │            │
+   ▼            ▼
+ ONLINE       problema/alert
