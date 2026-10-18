@@ -1,0 +1,126 @@
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:02:49.366319 2026] [mpm_winnt:notice] [pid 3860:tid 588] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 19:02:49.368994 2026] [mpm_winnt:notice] [pid 3860:tid 588] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 19:02:49.368994 2026] [core:notice] [pid 3860:tid 588] AH00094: Command line: 'C:\\Users\\salvo\\Documents\\GitHub\\UnaIdeaCrazy\\Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 19:02:49.381670 2026] [mpm_winnt:notice] [pid 3860:tid 588] AH00418: Parent: Created child process 6804
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+Apache server shutdown initiated...
+ly determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:02:52.061485 2026] [mpm_winnt:notice] [pid 6804:tid 580] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 19:03:33.873272 2026] [mpm_winnt:notice] [pid 3860:tid 588] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 19:03:36.344833 2026] [mpm_winnt:notice] [pid 6804:tid 580] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 19:03:36.372884 2026] [mpm_winnt:notice] [pid 3860:tid 588] AH00430: Parent: Child process 6804 exited successfully.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:35:17.459878 2026] [mpm_winnt:notice] [pid 20096:tid 576] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 19:35:17.465447 2026] [mpm_winnt:notice] [pid 20096:tid 576] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 19:35:17.465447 2026] [core:notice] [pid 20096:tid 576] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 19:35:17.471182 2026] [mpm_winnt:notice] [pid 20096:tid 576] AH00418: Parent: Created child process 23872
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+Apache server shutdown initiated...
+ly determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:35:19.531862 2026] [mpm_winnt:notice] [pid 23872:tid 560] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 19:35:24.241300 2026] [mpm_winnt:notice] [pid 20096:tid 576] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 19:35:26.250755 2026] [mpm_winnt:notice] [pid 23872:tid 560] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 19:35:26.284113 2026] [mpm_winnt:notice] [pid 20096:tid 576] AH00430: Parent: Child process 23872 exited successfully.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:36:02.583416 2026] [mpm_winnt:notice] [pid 13424:tid 604] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 19:36:02.583416 2026] [mpm_winnt:notice] [pid 13424:tid 604] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 19:36:02.583416 2026] [core:notice] [pid 13424:tid 604] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 19:36:02.583416 2026] [mpm_winnt:notice] [pid 13424:tid 604] AH00418: Parent: Created child process 20380
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+Apache server shutdown initiated...
+ly determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:36:04.649583 2026] [mpm_winnt:notice] [pid 20380:tid 576] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 19:36:07.470642 2026] [mpm_winnt:notice] [pid 13424:tid 604] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 19:36:09.477024 2026] [mpm_winnt:notice] [pid 20380:tid 576] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 19:36:09.502689 2026] [mpm_winnt:notice] [pid 13424:tid 604] AH00430: Parent: Child process 20380 exited successfully.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:37:01.087373 2026] [mpm_winnt:notice] [pid 18588:tid 568] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 19:37:01.090472 2026] [mpm_winnt:notice] [pid 18588:tid 568] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 19:37:01.090472 2026] [core:notice] [pid 18588:tid 568] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 19:37:01.098816 2026] [mpm_winnt:notice] [pid 18588:tid 568] AH00418: Parent: Created child process 5976
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+Apache server shutdown initiated...
+ly determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:37:03.312524 2026] [mpm_winnt:notice] [pid 5976:tid 584] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 19:37:11.109864 2026] [mpm_winnt:notice] [pid 18588:tid 568] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 19:37:13.121635 2026] [mpm_winnt:notice] [pid 5976:tid 584] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 19:37:13.137821 2026] [mpm_winnt:notice] [pid 18588:tid 568] AH00430: Parent: Child process 5976 exited successfully.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:37:43.150089 2026] [mpm_winnt:notice] [pid 3196:tid 564] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 19:37:43.156232 2026] [mpm_winnt:notice] [pid 3196:tid 564] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 19:37:43.156232 2026] [core:notice] [pid 3196:tid 564] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 19:37:43.158238 2026] [mpm_winnt:notice] [pid 3196:tid 564] AH00418: Parent: Created child process 20976
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:37:45.223854 2026] [mpm_winnt:notice] [pid 20976:tid 612] AH00354: Child: Starting 64 worker threads.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:40:42.751830 2026] [core:warn] [pid 23192:tid 572] AH00098: pid file C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?
+[Sun Oct 18 19:40:42.755895 2026] [mpm_winnt:notice] [pid 23192:tid 572] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 19:40:42.755895 2026] [mpm_winnt:notice] [pid 23192:tid 572] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 19:40:42.755895 2026] [core:notice] [pid 23192:tid 572] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 19:40:42.763250 2026] [mpm_winnt:notice] [pid 23192:tid 572] AH00418: Parent: Created child process 6716
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:40:44.913859 2026] [mpm_winnt:notice] [pid 6716:tid 600] AH00354: Child: Starting 64 worker threads.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:42:32.066836 2026] [core:warn] [pid 19564:tid 572] AH00098: pid file C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?
+[Sun Oct 18 19:42:32.066836 2026] [mpm_winnt:notice] [pid 19564:tid 572] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 19:42:32.066836 2026] [mpm_winnt:notice] [pid 19564:tid 572] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 19:42:32.066836 2026] [core:notice] [pid 19564:tid 572] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 19:42:32.066836 2026] [mpm_winnt:notice] [pid 19564:tid 572] AH00418: Parent: Created child process 2512
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:42:34.119088 2026] [mpm_winnt:notice] [pid 2512:tid 640] AH00354: Child: Starting 64 worker threads.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:44:54.516702 2026] [core:warn] [pid 23620:tid 576] AH00098: pid file C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?
+[Sun Oct 18 19:44:54.520703 2026] [mpm_winnt:notice] [pid 23620:tid 576] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 19:44:54.520703 2026] [mpm_winnt:notice] [pid 23620:tid 576] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 19:44:54.520703 2026] [core:notice] [pid 23620:tid 576] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 19:44:54.527423 2026] [mpm_winnt:notice] [pid 23620:tid 576] AH00418: Parent: Created child process 5484
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:44:56.728618 2026] [mpm_winnt:notice] [pid 5484:tid 572] AH00354: Child: Starting 64 worker threads.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:49:20.622454 2026] [core:warn] [pid 20896:tid 364] AH00098: pid file C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?
+[Sun Oct 18 19:49:20.622454 2026] [mpm_winnt:notice] [pid 20896:tid 364] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 19:49:20.622454 2026] [mpm_winnt:notice] [pid 20896:tid 364] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 19:49:20.622454 2026] [core:notice] [pid 20896:tid 364] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 19:49:20.633434 2026] [mpm_winnt:notice] [pid 20896:tid 364] AH00418: Parent: Created child process 6604
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+Apache server shutdown initiated...
+ly determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 19:49:22.704402 2026] [mpm_winnt:notice] [pid 6604:tid 588] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 19:54:24.942699 2026] [mpm_winnt:notice] [pid 20896:tid 364] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 19:54:26.944965 2026] [mpm_winnt:notice] [pid 6604:tid 588] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 19:54:27.017601 2026] [mpm_winnt:notice] [pid 20896:tid 364] AH00430: Parent: Child process 6604 exited successfully.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 20:04:37.188316 2026] [mpm_winnt:notice] [pid 21304:tid 568] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:04:37.193653 2026] [mpm_winnt:notice] [pid 21304:tid 568] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:04:37.193653 2026] [core:notice] [pid 21304:tid 568] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:04:37.197671 2026] [mpm_winnt:notice] [pid 21304:tid 568] AH00418: Parent: Created child process 24356
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 20:04:39.369474 2026] [mpm_winnt:notice] [pid 24356:tid 564] AH00354: Child: Starting 64 worker threads.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 20:08:41.261314 2026] [core:warn] [pid 24732:tid 580] AH00098: pid file C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?
+[Sun Oct 18 20:08:41.261314 2026] [mpm_winnt:notice] [pid 24732:tid 580] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:08:41.261314 2026] [mpm_winnt:notice] [pid 24732:tid 580] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:08:41.261314 2026] [core:notice] [pid 24732:tid 580] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:08:41.265703 2026] [mpm_winnt:notice] [pid 24732:tid 580] AH00418: Parent: Created child process 23624
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+Apache server shutdown initiated...
+ly determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 20:08:43.349175 2026] [mpm_winnt:notice] [pid 23624:tid 588] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 20:14:38.442116 2026] [mpm_winnt:notice] [pid 24732:tid 580] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 20:14:40.461160 2026] [mpm_winnt:notice] [pid 23624:tid 588] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 20:14:40.477217 2026] [mpm_winnt:notice] [pid 24732:tid 580] AH00430: Parent: Child process 23624 exited successfully.
+[Sun Oct 18 20:15:05.830475 2026] [mpm_winnt:notice] [pid 16956:tid 592] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:15:05.830475 2026] [mpm_winnt:notice] [pid 16956:tid 592] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:15:05.830475 2026] [core:notice] [pid 16956:tid 592] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:15:05.846359 2026] [mpm_winnt:notice] [pid 16956:tid 592] AH00418: Parent: Created child process 7320
+Apache server shutdown initiated...
+pm_winnt:notice] [pid 7320:tid 600] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 20:15:24.580419 2026] [mpm_winnt:notice] [pid 16956:tid 592] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 20:15:26.595000 2026] [mpm_winnt:notice] [pid 7320:tid 600] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 20:15:26.624912 2026] [mpm_winnt:notice] [pid 16956:tid 592] AH00430: Parent: Child process 7320 exited successfully.
