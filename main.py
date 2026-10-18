@@ -7,6 +7,7 @@ os.system('')
 # ANSI escape codes
 RED = "\033[91m"
 WHITE = "\033[97m"
+GREEN = "\033[92m"
 RESET = "\033[0m"
 
 os.system('cls' if os.name == 'nt' else 'clear')  # Clear the console for better readability
@@ -15,8 +16,8 @@ user_input = ""
 def get_process_status(process_name):
     c = wmi.WMI()
     for process in c.Win32_Process(name=process_name):
-        return "ONLINE", process.ProcessId
-    return "OFFLINE", None
+        return f"{GREEN}ONLINE {RESET}", process.ProcessId
+    return f"{RED}OFFLINE {RESET}", None
 
 apachestatus = get_process_status("httpd.exe")
 mysqlstatus = get_process_status("mysql.exe")
@@ -24,7 +25,7 @@ mysqlstatus = get_process_status("mysql.exe")
 services_status = {
 
     "mission_control": {
-        "status": "ONLINE",
+        "status": f"{GREEN}ONLINE {RESET}",
         "pid": os.getpid()},
 
     "APACHE": {
@@ -66,14 +67,14 @@ while True:
 
     Mission_control_table = rf"""
     ┌──────────────────────────────────────────────────────────────────
-    │              MISSION CONTROL  ● ONLINE    PID {services_status['mission_control']['pid']}        
+    │              MISSION CONTROL  ● {services_status['mission_control']['status']}     PID {services_status['mission_control']['pid']}        
     ├──────────────────────────────────────────────────────────────────
     │                                             
     │  SERVICES                                   
     │                                             
     │  {'SERVICE':<12}{'STATUS':<12}{'PID':<10}LINK                         
-    │  {'APACHE':<12}● {services_status['APACHE']['status']:<10}{str(services_status['APACHE']['pid']):<10}http://127.0.0.1/   
-    │  {'MYSQL':<12}● {services_status['MYSQL']['status']:<10}{str(services_status['MYSQL']['pid']):<10}http://127.0.0.1/   
+    │  {'APACHE':<12}● {services_status['APACHE']['status']:<12}  {str(services_status['APACHE']['pid']):<10}http://127.0.0.1/   
+    │  {'MYSQL':<12}● {services_status['MYSQL']['status']:<12}  {str(services_status['MYSQL']['pid']):<10}http://127.0.0.1/   
     │    
     │                                             
     ├──────────────────────────────────────────────────────────────────
@@ -89,7 +90,7 @@ while True:
     services_status = {
 
     "mission_control": {
-        "status": "ONLINE",
+        "status": f"{GREEN}ONLINE {RESET}",
         "pid": os.getpid()},
 
     "APACHE": {
