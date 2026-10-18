@@ -1,6 +1,5 @@
 import os
 import wmi
-import speedtest_cli
 
 # Enable ANSI escape sequences in Windows console
 os.system('')
@@ -72,8 +71,9 @@ while True:
     │                                             
     │  SERVICES                                   
     │                                             
-    │  APACHE       ● {services_status['APACHE']['status']}    PID {services_status['APACHE']['pid']}   
-    │  MYSQL        ● {services_status['MYSQL']['status']}   PID {services_status['MYSQL']['pid']}  
+    │  {'SERVICE':<12}{'STATUS':<12}{'PID':<10}LINK                         
+    │  {'APACHE':<12}● {services_status['APACHE']['status']:<10}{str(services_status['APACHE']['pid']):<10}http://127.0.0.1/   
+    │  {'MYSQL':<12}● {services_status['MYSQL']['status']:<10}{str(services_status['MYSQL']['pid']):<10}http://127.0.0.1/   
     │    
     │                                             
     ├──────────────────────────────────────────────────────────────────

@@ -124,3 +124,94 @@ pm_winnt:notice] [pid 7320:tid 600] AH00354: Child: Starting 64 worker threads.
 [Sun Oct 18 20:15:24.580419 2026] [mpm_winnt:notice] [pid 16956:tid 592] AH00422: Parent: Received shutdown signal -- Shutting down the server.
 [Sun Oct 18 20:15:26.595000 2026] [mpm_winnt:notice] [pid 7320:tid 600] AH00364: Child: All worker threads have exited.
 [Sun Oct 18 20:15:26.624912 2026] [mpm_winnt:notice] [pid 16956:tid 592] AH00430: Parent: Child process 7320 exited successfully.
+[Sun Oct 18 20:19:13.611611 2026] [mpm_winnt:notice] [pid 16480:tid 568] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:19:13.611611 2026] [mpm_winnt:notice] [pid 16480:tid 568] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:19:13.611611 2026] [core:notice] [pid 16480:tid 568] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:19:13.611611 2026] [mpm_winnt:notice] [pid 16480:tid 568] AH00418: Parent: Created child process 23984
+Apache server shutdown initiated...
+pm_winnt:notice] [pid 23984:tid 576] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 20:22:37.484447 2026] [mpm_winnt:notice] [pid 16480:tid 568] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 20:22:39.492281 2026] [mpm_winnt:notice] [pid 23984:tid 576] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 20:22:39.508189 2026] [mpm_winnt:notice] [pid 16480:tid 568] AH00430: Parent: Child process 23984 exited successfully.
+[Sun Oct 18 20:22:42.128069 2026] [mpm_winnt:notice] [pid 16928:tid 584] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:22:42.128069 2026] [mpm_winnt:notice] [pid 16928:tid 584] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:22:42.128069 2026] [core:notice] [pid 16928:tid 584] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:22:42.128069 2026] [mpm_winnt:notice] [pid 16928:tid 584] AH00418: Parent: Created child process 10532
+Apache server shutdown initiated...
+pm_winnt:notice] [pid 10532:tid 620] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 20:22:43.690028 2026] [mpm_winnt:notice] [pid 16928:tid 584] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 20:22:45.711486 2026] [mpm_winnt:notice] [pid 10532:tid 620] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 20:22:45.727541 2026] [mpm_winnt:notice] [pid 16928:tid 584] AH00430: Parent: Child process 10532 exited successfully.
+[Sun Oct 18 20:25:13.977438 2026] [mpm_winnt:notice] [pid 20288:tid 572] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:25:13.985529 2026] [mpm_winnt:notice] [pid 20288:tid 572] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:25:13.985529 2026] [core:notice] [pid 20288:tid 572] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:25:13.988741 2026] [mpm_winnt:notice] [pid 20288:tid 572] AH00418: Parent: Created child process 21656
+^CApache server shutdown initiated...
+_winnt:notice] [pid 21656:tid 592] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 20:25:24.930975 2026] [authz_core:error] [pid 21656:tid 1308] [client 127.0.0.1:57865] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:25:26.405937 2026] [authz_core:error] [pid 21656:tid 1308] [client 127.0.0.1:57865] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:25:26.938502 2026] [authz_core:error] [pid 21656:tid 1308] [client 127.0.0.1:57865] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:25:27.374082 2026] [authz_core:error] [pid 21656:tid 1308] [client 127.0.0.1:57865] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+^C[Sun Oct 18 20:25:30.107362 2026] [mpm_winnt:notice] [pid 20288:tid 572] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 20:25:34.420063 2026] [mpm_winnt:notice] [pid 21656:tid 592] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 20:25:34.436154 2026] [mpm_winnt:notice] [pid 20288:tid 572] AH00430: Parent: Child process 21656 exited successfully.
+[Sun Oct 18 20:43:44.750052 2026] [mpm_winnt:notice] [pid 2944:tid 572] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:43:44.765724 2026] [mpm_winnt:notice] [pid 2944:tid 572] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:43:44.765724 2026] [core:notice] [pid 2944:tid 572] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:43:44.765724 2026] [mpm_winnt:notice] [pid 2944:tid 572] AH00418: Parent: Created child process 20160
+Apache server shutdown initiated...
+pm_winnt:notice] [pid 20160:tid 612] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 20:43:58.513704 2026] [authz_core:error] [pid 20160:tid 1200] [client 127.0.0.1:57114] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:44:02.952734 2026] [authz_core:error] [pid 20160:tid 1200] [client 127.0.0.1:57114] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:44:19.396962 2026] [authz_core:error] [pid 20160:tid 1200] [client 127.0.0.1:37260] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:44:19.938358 2026] [authz_core:error] [pid 20160:tid 1200] [client 127.0.0.1:37260] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:44:29.676422 2026] [authz_core:error] [pid 20160:tid 1200] [client 127.0.0.1:53273] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.html
+[Sun Oct 18 20:44:34.398179 2026] [authz_core:error] [pid 20160:tid 1200] [client 127.0.0.1:53273] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:44:38.485727 2026] [authz_core:error] [pid 20160:tid 1200] [client 127.0.0.1:53273] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:45:34.509012 2026] [mpm_winnt:notice] [pid 2944:tid 572] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 20:45:36.524907 2026] [mpm_winnt:notice] [pid 20160:tid 612] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 20:45:36.540861 2026] [mpm_winnt:notice] [pid 2944:tid 572] AH00430: Parent: Child process 20160 exited successfully.
+[Sun Oct 18 20:45:38.875743 2026] [mpm_winnt:notice] [pid 10356:tid 580] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:45:38.875743 2026] [mpm_winnt:notice] [pid 10356:tid 580] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:45:38.875743 2026] [core:notice] [pid 10356:tid 580] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:45:38.875743 2026] [mpm_winnt:notice] [pid 10356:tid 580] AH00418: Parent: Created child process 14556
+Apache server shutdown initiated...
+pm_winnt:notice] [pid 14556:tid 564] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 20:45:45.259484 2026] [authz_core:error] [pid 14556:tid 1220] [client 127.0.0.1:56763] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:45:45.720110 2026] [authz_core:error] [pid 14556:tid 1220] [client 127.0.0.1:56763] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:45:46.082318 2026] [authz_core:error] [pid 14556:tid 1220] [client 127.0.0.1:56763] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:45:47.069315 2026] [authz_core:error] [pid 14556:tid 1220] [client 127.0.0.1:56763] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:46:20.568941 2026] [mpm_winnt:notice] [pid 10356:tid 580] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 20:46:22.586426 2026] [mpm_winnt:notice] [pid 14556:tid 564] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 20:46:22.611469 2026] [mpm_winnt:notice] [pid 10356:tid 580] AH00430: Parent: Child process 14556 exited successfully.
+[Sun Oct 18 20:46:26.148991 2026] [mpm_winnt:notice] [pid 2512:tid 572] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:46:26.148991 2026] [mpm_winnt:notice] [pid 2512:tid 572] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:46:26.148991 2026] [core:notice] [pid 2512:tid 572] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:46:26.156418 2026] [mpm_winnt:notice] [pid 2512:tid 572] AH00418: Parent: Created child process 17336
+Apache server shutdown initiated...
+pm_winnt:notice] [pid 17336:tid 576] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 20:46:27.568729 2026] [authz_core:error] [pid 17336:tid 1200] [client 127.0.0.1:30605] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:46:27.962135 2026] [authz_core:error] [pid 17336:tid 1200] [client 127.0.0.1:30605] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:46:28.214847 2026] [authz_core:error] [pid 17336:tid 1200] [client 127.0.0.1:30605] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:47:18.606730 2026] [mpm_winnt:notice] [pid 2512:tid 572] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 20:47:20.619402 2026] [mpm_winnt:notice] [pid 17336:tid 576] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 20:47:20.637307 2026] [mpm_winnt:notice] [pid 2512:tid 572] AH00430: Parent: Child process 17336 exited successfully.
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 20:47:24.475201 2026] [mpm_winnt:notice] [pid 13028:tid 556] AH00455: Apache/2.4.69 (Win64) configured -- resuming normal operations
+[Sun Oct 18 20:47:24.477209 2026] [mpm_winnt:notice] [pid 13028:tid 556] AH00456: Apache Lounge VS18 Server built: Oct  1 2026 09:34:06
+[Sun Oct 18 20:47:24.477209 2026] [core:notice] [pid 13028:tid 556] AH00094: Command line: 'Apache24\\bin\\httpd.exe -d C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24'
+[Sun Oct 18 20:47:24.486341 2026] [mpm_winnt:notice] [pid 13028:tid 556] AH00418: Parent: Created child process 25576
+AH00558: httpd.exe: Could not reliably determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+Apache server shutdown initiated...
+ly determine the server's fully qualified domain name, using fe80::800:27ff:fe00:7. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 18 20:47:26.710365 2026] [mpm_winnt:notice] [pid 25576:tid 572] AH00354: Child: Starting 64 worker threads.
+[Sun Oct 18 20:47:26.715333 2026] [authz_core:error] [pid 25576:tid 1360] [client 127.0.0.1:63058] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:47:27.716799 2026] [authz_core:error] [pid 25576:tid 1360] [client 127.0.0.1:63058] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/index.php
+[Sun Oct 18 20:47:30.909735 2026] [authz_core:error] [pid 25576:tid 1360] [client 127.0.0.1:63058] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:47:33.742962 2026] [authz_core:error] [pid 25576:tid 1360] [client 127.0.0.1:63058] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:48:43.618430 2026] [authz_core:error] [pid 25576:tid 1360] [client 127.0.0.1:9525] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:48:49.682585 2026] [authz_core:error] [pid 25576:tid 1360] [client ::1:12149] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/
+[Sun Oct 18 20:48:49.959695 2026] [authz_core:error] [pid 25576:tid 1360] [client ::1:12149] AH01630: client denied by server configuration: C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/Apache24/favicon.ico, referer: http://localhost/
+[Sun Oct 18 20:48:54.501502 2026] [mpm_winnt:notice] [pid 13028:tid 556] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Sun Oct 18 20:48:57.018584 2026] [mpm_winnt:notice] [pid 25576:tid 572] AH00364: Child: All worker threads have exited.
+[Sun Oct 18 20:48:57.044140 2026] [mpm_winnt:notice] [pid 13028:tid 556] AH00430: Parent: Child process 25576 exited successfully.
