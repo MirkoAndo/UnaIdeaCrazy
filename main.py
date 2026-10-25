@@ -8,6 +8,8 @@ os.system('')
 RED = "\033[91m"
 WHITE = "\033[97m"
 GREEN = "\033[92m"
+BLUE = "\033[94m"
+LIGHTYELLOW = "\033[93m"
 RESET = "\033[0m"
 
 os.system('cls' if os.name == 'nt' else 'clear')  # Clear the console for better readability
@@ -16,7 +18,8 @@ user_input = ""
 def get_process_status(process_name):
     c = wmi.WMI()
     for process in c.Win32_Process(name=process_name):
-        return f"{GREEN}ONLINE {RESET}", process.ProcessId
+        # Keep the rendered status width equal to OFFLINE so the links stay aligned.
+        return f"{GREEN}ONLINE  {RESET}", process.ProcessId
     return f"{RED}OFFLINE {RESET}", None
 
 apachestatus = get_process_status("httpd.exe")
@@ -26,15 +29,27 @@ services_status = {
 
     "mission_control": {
         "status": f"{GREEN}ONLINE {RESET}",
-        "pid": os.getpid()},
+        "pid": os.getpid(),
+        "position": "C:/Users/salvo/Documents/GitHub/Servizi/mission_control"},
 
     "APACHE": {
         "status": apachestatus[0], 
-        "pid": apachestatus[1]},
+        "pid": apachestatus[1],
+        "position": "C:/Users/salvo/Documents/GitHub/Servizi/Apache24"},
+
 
     "MYSQL": {
         "status": mysqlstatus[0],
-        "pid": mysqlstatus[1]},
+        "pid": mysqlstatus[1],
+        "position": "C:/Users/salvo/Documents/GitHub/Servizi/mysql-26.10.0"
+        },
+    
+    "PHP": {
+        "status": None,
+        "pid": None,
+        "position": "C:/Users/salvo/Documents/GitHub/Servizi/php-8.5.12x64"
+        }
+
     }
 
  
@@ -54,12 +69,17 @@ $$/      $$/ $$/ $$/       $$/   $$/  $$$$$$/        $$/   $$/ $$/   $$/  $$$$$$
 
 while True:
     apachestatus = get_process_status("httpd.exe")
-    mysqlstatus = get_process_status("mysql.exe")
-    cpu_usage = wmi.WMI().Win32_Processor()[0].LoadPercentage
-    operating_system = wmi.WMI().Win32_OperatingSystem()[0]
-    total_memory_mb = int(operating_system.TotalVisibleMemorySize) / 1024
-    free_memory_mb = int(operating_system.FreePhysicalMemory) / 1024
-    ram_usage = round(total_memory_mb - free_memory_mb, 2)
+    mysqlstatus = get_process_status("mysqld.exe")
+    cpu_usage = 0
+    total_memory_mb = 0
+    free_memory_mb = 0
+    ram_usage = 0
+    operating_system = None
+    #cpu_usage = wmi.WMI().Win32_Processor()[0].LoadPercentage
+    #operating_system = wmi.WMI().Win32_OperatingSystem()[0]
+    #total_memory_mb = int(operating_system.TotalVisibleMemorySize) / 1024
+    #free_memory_mb = int(operating_system.FreePhysicalMemory) / 1024
+    #ram_usage = round(total_memory_mb - free_memory_mb, 2)
 
     
 
@@ -67,19 +87,20 @@ while True:
 
     Mission_control_table = rf"""
     ┌──────────────────────────────────────────────────────────────────
-    │              MISSION CONTROL  ● {services_status['mission_control']['status']}     PID {services_status['mission_control']['pid']}        
+    │              MISSION CONTROL  ● {services_status['mission_control']['status']}     PID {services_status['mission_control']['pid']}
+    ├──────────────────────────────────────────────────────────────────
+    │         
+    │  SERVIZI
+    │
+    │  {'SERVICE':<12}{'STATUS':<12}{'PID':<10}LINK
+    │  {'APACHE':<12}● {services_status['APACHE']['status']:<12}  {str(services_status['APACHE']['pid']):<10}{BLUE}http://127.0.0.1/{RESET}
+    │  {'MYSQL':<12}● {services_status['MYSQL']['status']:<12}  {str(services_status['MYSQL']['pid']):<10}{BLUE}http://127.0.0.1/{RESET}{LIGHTYELLOW}phpmyadmin{RESET}
+    |
+    ├──────────────────────────────────────────────────────────────────
+    │ /help  - lista comandi custom                                            
     ├──────────────────────────────────────────────────────────────────
     │                                             
-    │  SERVICES                                   
-    │                                             
-    │  {'SERVICE':<12}{'STATUS':<12}{'PID':<10}LINK                         
-    │  {'APACHE':<12}● {services_status['APACHE']['status']:<12}  {str(services_status['APACHE']['pid']):<10}http://127.0.0.1/   
-    │  {'MYSQL':<12}● {services_status['MYSQL']['status']:<12}  {str(services_status['MYSQL']['pid']):<10}http://127.0.0.1/   
-    │    
-    │                                             
-    ├──────────────────────────────────────────────────────────────────
-    │                                             
-    │  SYSTEM                                     
+    │  SISTEMA                                     
     │                                             
     │  CPU      {cpu_usage} %             
     │  RAM      {ram_usage/1024:.2f} GB   
@@ -95,11 +116,13 @@ while True:
 
     "APACHE": {
         "status": apachestatus[0], 
-        "pid": apachestatus[1]},
+        "pid": apachestatus[1],
+        "position": "C:/Users/salvo/Documents/GitHub/Servizi/Apache24"},
 
     "MYSQL": {
         "status": mysqlstatus[0],
-        "pid": mysqlstatus[1]},
+        "pid": mysqlstatus[1],
+        "position": "C:/Users/salvo/Documents/GitHub/Servizi/mysql-26.10.0"},
     }
 
     print(f"{RED}{ASCII_logo_service}{RESET}")
@@ -110,7 +133,16 @@ while True:
         os.system('cls' if os.name == 'nt' else 'clear')
         break
 
+    if user_input.lower() == '/help':
+        print("Lista comandi custom:")
+        print("  /help - mostra questa lista")
+        print("  sv apache - avvia Apache")
+        print("  sv mysql - avvia MySQL")
+        print("  stop apache - ferma Apache")
+        print("  stop mysql - ferma MySQL")
+
     custom_command = user_input.lower() in {
+        '/help',
         'sv apache',
         'sv mysql',
         'stop apache',
@@ -118,13 +150,13 @@ while True:
     }
 
     if user_input.lower() == 'sv apache':
-        os.system(r'start Apache24\bin\httpd.exe')
+        os.system(fr'start "" "{services_status["APACHE"]["position"]}\bin\httpd.exe"')
         apachestatus = get_process_status("httpd.exe")
 
 
     if user_input.lower() == 'sv mysql':
-        os.system(r'start MySQL\bin\mysqld.exe')
-        mysqlstatus = get_process_status("mysql.exe")
+        os.system(fr'start "" "{services_status["MYSQL"]["position"]}\bin\mysqld.exe" --defaults-file="{services_status["MYSQL"]["position"]}\my.ini"')
+        mysqlstatus = get_process_status("mysqld.exe")
 
 
     if user_input.lower() == 'stop apache':
@@ -133,8 +165,8 @@ while True:
 
 
     if user_input.lower() == 'stop mysql':
-        os.system('taskkill /F /IM mysql.exe')
-        mysqlstatus = get_process_status("mysql.exe")
+        os.system('taskkill /F /IM mysqld.exe')
+        mysqlstatus = get_process_status("mysqld.exe")
 
 
     if not custom_command:
