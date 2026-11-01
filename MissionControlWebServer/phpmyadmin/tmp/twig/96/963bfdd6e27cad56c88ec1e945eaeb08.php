@@ -72,6 +72,6 @@ class __TwigTemplate_815094e09de6c122efbaf752dca65adb extends Template
 
     public function getSourceContext()
     {
-        return new Source("", "login/footer.twig", "C:\\Users\\salvo\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\login\\footer.twig");
+        return new Source("", "login/footer.twig", "C:\\Users\\mirko\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\login\\footer.twig");
     }
 }

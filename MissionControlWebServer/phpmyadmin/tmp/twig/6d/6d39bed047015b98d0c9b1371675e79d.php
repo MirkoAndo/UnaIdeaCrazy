@@ -303,6 +303,6 @@ yield _gettext("Reset");
 
     public function getSourceContext()
     {
-        return new Source("", "config/form_display/display.twig", "C:\\Users\\salvo\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\config\\form_display\\display.twig");
+        return new Source("", "config/form_display/display.twig", "C:\\Users\\mirko\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\config\\form_display\\display.twig");
     }
 }

@@ -98,6 +98,6 @@ yield _gettext("Delete settings");
 
     public function getSourceContext()
     {
-        return new Source("", "preferences/autoload.twig", "C:\\Users\\salvo\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\preferences\\autoload.twig");
+        return new Source("", "preferences/autoload.twig", "C:\\Users\\mirko\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\preferences\\autoload.twig");
     }
 }

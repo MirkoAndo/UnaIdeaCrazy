@@ -30,24 +30,24 @@ services_status = {
     "mission_control": {
         "status": f"{GREEN}ONLINE {RESET}",
         "pid": os.getpid(),
-        "position": "C:/Users/salvo/Documents/GitHub/Servizi/mission_control"},
+        "position": "localset"},
 
     "APACHE": {
         "status": apachestatus[0], 
         "pid": apachestatus[1],
-        "position": "C:/Users/salvo/Documents/GitHub/Servizi/Apache24"},
+        "position": "../Servizi_UnaIdeaCrazy/Apache24"},
 
 
     "MYSQL": {
         "status": mysqlstatus[0],
         "pid": mysqlstatus[1],
-        "position": "C:/Users/salvo/Documents/GitHub/Servizi/mysql-26.10.0"
+        "position": "../Servizi_UnaIdeaCrazy/mysql-26.10.0"
         },
     
     "PHP": {
         "status": None,
         "pid": None,
-        "position": "C:/Users/salvo/Documents/GitHub/Servizi/php-8.5.12x64"
+        "position": "../Servizi_UnaIdeaCrazy/php-8.5.12x64"
         }
 
     }
@@ -117,12 +117,12 @@ while True:
     "APACHE": {
         "status": apachestatus[0], 
         "pid": apachestatus[1],
-        "position": "C:/Users/salvo/Documents/GitHub/Servizi/Apache24"},
+        "position": "../Servizi_UnaIdeaCrazy/Apache24"},
 
     "MYSQL": {
         "status": mysqlstatus[0],
         "pid": mysqlstatus[1],
-        "position": "C:/Users/salvo/Documents/GitHub/Servizi/mysql-26.10.0"},
+        "position": "../Servizi_UnaIdeaCrazy/mysql-26.10.0"},
     }
 
     print(f"{RED}{ASCII_logo_service}{RESET}")
