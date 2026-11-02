@@ -3,61 +3,73 @@
 Web application locale per Windows che unisce due moduli:
 
 - **My Cloud** – gestione di file sul file system locale.
-- **Mission Control** – monitoraggio dello stato dei servizi (Apache, MySQL, Python).
+- **Mission Control** – monitoraggio dello stato e gestione dei servizi (Apache, MySQL, Python).
 
-Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come modulo Apache), **MySQL** e uno script **Python** di monitoraggio (`main.py`). Tutti i servizi sono eseguiti in modalità portabile, senza installazione di sistema, e sono raggiungibili esclusivamente da `localhost`.
+Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come modulo Apache), **MySQL** e uno script **Python** interattivo di monitoraggio (`main.py`). Tutti i servizi sono eseguiti in modalità portabile, senza installazione di sistema, e sono raggiungibili esclusivamente da `localhost`.
 
 ---
 
 ## Indice
 
-1. [Requisiti](#requisiti)
+1. [Requisiti e Download](#requisiti-e-download)
 2. [Struttura delle directory](#struttura-delle-directory)
 3. [Configurazione di Apache](#configurazione-di-apache)
 4. [Configurazione di PHP](#configurazione-di-php)
-5. [Avvio dei servizi](#avvio-dei-servizi)
-6. [Note di sicurezza](#note-di-sicurezza)
+5. [Configurazione di MySQL (`my.ini`)](#configurazione-di-mysql-myini)
+6. [Avvio dei servizi e comandi CLI](#avvio-dei-servizi-e-comandi-cli)
+7. [Script batch (`CmdCommands`)](#script-batch-cmdcommands)
+8. [Note di sicurezza](#note-di-sicurezza)
 
 ---
 
-## Requisiti
+## Requisiti e Download
 
-| Componente | Versione | Note |
-|---|---|---|
-| Windows | 10 / 11 x64 | |
-| Apache HTTP Server | 2.4 (`Apache24`) | Build Win64 (es. Apache Lounge) |
-| PHP | 8.5.12 x64 (`php-8.5.12x64`) | Build **Thread Safe (TS)**, necessaria per `php8apache2_4.dll` |
-| MySQL | 26.10.0 (`mysql-26.10.0`) | Distribuzione ZIP |
-| Microsoft Visual C++ Redistributable | 2015–2022 x64 | Richiesto da Apache e PHP |
-| Python | 3.x | Dipendenza: `wmi` (`pip install wmi`) |
-| phpMyAdmin | 5.2.3 | Già incluso in `MissionControlWebServer/phpmyadmin` |
+| Componente | Versione | Link Download | Note |
+|---|---|---|---|
+| Windows | 10 / 11 x64 | - | Sistema operativo |
+| Visual C++ Redistributable | 2015–2022 x64 | [Download VC++ x64](https://aka.ms/vs/17/release/vc_redist.x64.exe) | Richiesto da Apache, PHP e MySQL |
+| Apache HTTP Server | 2.4 (`Apache24`) | [Apache Lounge Downloads](https://www.apachelounge.com/download/) | Build Win64 (ZIP portabile) |
+| PHP | 8.5.x x64 (`php-8.5.12x64`) | [PHP for Windows](https://windows.php.net/download/) | Build **VS17 x64 Thread Safe (TS)**, necessaria per `php8apache2_4.dll` |
+| MySQL Server | 8.x / 26.x (`mysql-26.10.0`) | [MySQL Community Server](https://dev.mysql.com/downloads/mysql/) | Selezionare **Windows (x86, 64-bit), ZIP Archive** |
+| phpMyAdmin | 5.2.3 | [phpMyAdmin Downloads](https://www.phpmyadmin.net/downloads/) | Già presente in `MissionControlWebServer/phpmyadmin` |
+| Python | 3.10+ | [Python Official Site](https://www.python.org/downloads/) | Richiede `wmi` (`pip install wmi`) |
 
-> **Nota:** la versione Non Thread Safe (NTS) di PHP **non** contiene `php8apache2_4.dll` e non può essere caricata come modulo Apache.
+> [!IMPORTANT]
+> La versione **Non Thread Safe (NTS)** di PHP **non** contiene `php8apache2_4.dll` e non può essere caricata come modulo nativo di Apache. Scaricare sempre la variante **Thread Safe (TS)**.
 
 ---
 
 ## Struttura delle directory
 
-Il progetto presuppone che i servizi siano estratti in una cartella `Servizi`, allo stesso livello del repository:
+Il progetto presuppone che i servizi siano estratti in una cartella `Servizi_UnaIdeaCrazy`, posizionata allo stesso livello del repository `UnaIdeaCrazy`:
 
 ```text
 GitHub/
-├── Servizi/
+├── Servizi_UnaIdeaCrazy/
 │   ├── Apache24/
 │   │   └── conf/
-│   │       ├── env.conf        # variabili d'ambiente locali (non versionato)
-│   │       └── httpd.conf
+│   │       ├── env.conf                # Variabili d'ambiente locali (non versionato)
+│   │       └── httpd.conf              # Configurazione principale Apache
 │   ├── mysql-26.10.0/
+│   │   ├── bin/
+│   │   ├── data/                       # Directory dei database
+│   │   └── my.ini                      # Configurazione MySQL
 │   └── php-8.5.12x64/
-│       └── php.ini
+│       ├── ext/
+│       └── php.ini                     # Configurazione PHP
 └── UnaIdeaCrazy/
-    ├── MissionControlWebServer/    # DocumentRoot di Apache
+    ├── CmdCommands/                    # Script batch eseguiti da main.py
+    │   ├── sv_apache.bat
+    │   ├── sv_mysql.bat
+    │   ├── stop_apache.bat
+    │   └── stop_mysql.bat
+    ├── MissionControlWebServer/        # DocumentRoot di Apache
     │   ├── index.php
     │   ├── index.html
     │   └── phpmyadmin/
-    ├── Obbiettivi/                 # specifiche di progetto
-    ├── main.py                     # monitor dei servizi
-    ├── .env                        # non versionato
+    ├── Obbiettivi/                     # Specifiche di progetto
+    ├── main.py                         # Monitor CLI e pannello di controllo
+    ├── .env                            # Variabili locali (non versionato)
     └── readme.md
 ```
 
@@ -72,16 +84,16 @@ La configurazione è suddivisa in due file:
 
 ### `Apache24/conf/env.conf`
 
-Adattare i percorsi alla propria installazione. In Apache è consigliato usare `/` come separatore anche su Windows.
+Adattare i percorsi alla propria installazione (usare lo slash `/` come separatore):
 
 ```apache
 # ==========================================
 # VARIABILI D'AMBIENTE LOCALI (APACHE)
 # ==========================================
 
-Define SRVROOT       "C:/Users/salvo/Documents/GitHub/Servizi/Apache24"
+Define SRVROOT       "C:/Users/salvo/Documents/GitHub/Servizi_UnaIdeaCrazy/Apache24"
 Define DOCUMENT_ROOT "C:/Users/salvo/Documents/GitHub/UnaIdeaCrazy/MissionControlWebServer"
-Define PHP_DIR       "C:/Users/salvo/Documents/GitHub/Servizi/php-8.5.12x64"
+Define PHP_DIR       "C:/Users/salvo/Documents/GitHub/Servizi_UnaIdeaCrazy/php-8.5.12x64"
 
 # Binding di sicurezza (solo localhost)
 Define HOST_IP   "127.0.0.1"
@@ -200,10 +212,10 @@ AddHandler application/x-httpd-php .php
 PHPIniDir "${PHP_DIR}"
 ```
 
-Verifica della sintassi:
+Verifica della sintassi di configurazione:
 
 ```powershell
-..\Servizi\Apache24\bin\httpd.exe -t
+..\Servizi_UnaIdeaCrazy\Apache24\bin\httpd.exe -t
 ```
 
 ---
@@ -227,69 +239,87 @@ extension=openssl
 extension=zip
 ```
 
-> **Nota:** un percorso relativo in `extension_dir` (es. `"./ext"`) viene risolto rispetto alla directory di lavoro del processo `httpd.exe`, non a quella di PHP. In caso di errori di caricamento delle estensioni, usare il percorso assoluto, ad esempio `extension_dir = "C:/Users/salvo/Documents/GitHub/Servizi/php-8.5.12x64/ext"`.
+> [!NOTE]
+> Un percorso relativo in `extension_dir` (es. `"./ext"`) viene risolto rispetto alla directory di lavoro del processo `httpd.exe`, non a quella di PHP. In caso di errori di caricamento delle estensioni, usare il percorso assoluto, ad esempio:  
+> `extension_dir = "C:/Users/salvo/Documents/GitHub/Servizi_UnaIdeaCrazy/php-8.5.12x64/ext"`
 
 Verifica dei moduli caricati:
 
 ```powershell
-..\Servizi\php-8.5.12x64\php.exe -m
+..\Servizi_UnaIdeaCrazy\php-8.5.12x64\php.exe -m
 ```
 
 ---
 
-## Avvio dei servizi
+## Configurazione di MySQL (`my.ini`)
 
-1. **MySQL** – al primo avvio inizializzare la data directory, poi avviare il server:
+All'interno della cartella di MySQL (`Servizi_UnaIdeaCrazy/mysql-26.10.0/`), creare o modificare il file `my.ini` con il seguente contenuto:
 
-   ```powershell
-   cd ..\Servizi\mysql-26.10.0\bin
-   .\mysqld.exe --initialize-insecure --console   # solo al primo avvio
-   .\mysqld.exe --console
-   ```
+```ini
+[mysqld]
+basedir=C:/Users/salvo/Documents/GitHub/Servizi_UnaIdeaCrazy/mysql-26.10.0
+datadir=C:/Users/salvo/Documents/GitHub/Servizi_UnaIdeaCrazy/mysql-26.10.0/data
+port=3306
+```
 
-2. **Apache**:
+Inizializzazione della cartella dati (`data`) al primo avvio:
 
-   ```powershell
-   ..\Servizi\Apache24\bin\httpd.exe
-   ```
+```powershell
+cd ..\Servizi_UnaIdeaCrazy\mysql-26.10.0\bin
+.\mysqld.exe --defaults-file="..\my.ini" --initialize-insecure --console
+```
 
-3. **Monitor dei servizi** (Mission Control CLI):
+---
 
-   ```powershell
-   pip install wmi
-   python main.py
-   ```
+## Avvio dei servizi e comandi CLI
 
-4. Aprire nel browser:
+È possibile avviare e monitorare l'intero ambiente tramite la CLI interattiva di `main.py`:
 
-   | Risorsa | URL |
-   |---|---|
-   | Mission Control | <http://127.0.0.1/> |
-   | phpMyAdmin | <http://127.0.0.1/phpmyadmin/> |
+```powershell
+pip install wmi
+python main.py
+```
+
+### Comandi disponibili in `main.py`
+
+Digitando `/help` all'interno della console interattiva, vengono mostrati i comandi disponibili:
+
+| Comando | Descrizione | Azione eseguita |
+|---|---|---|
+| `/help` | Mostra la lista dei comandi custom | Stampa la guida a video |
+| `sv apache` | Avvia Apache HTTP Server | Esegue `CmdCommands\sv_apache.bat` |
+| `sv mysql` | Avvia MySQL Server | Esegue `CmdCommands\sv_mysql.bat` |
+| `stop apache` | Ferma Apache | Esegue `CmdCommands\stop_apache.bat` |
+| `stop mysql` | Ferma MySQL | Esegue `CmdCommands\stop_mysql.bat` |
+| `exit` / `quit` | Esce dalla console | Termina l'interfaccia di monitoraggio |
+
+### URL delle risorse Web
+
+| Risorsa | URL |
+|---|---|
+| Mission Control | <http://127.0.0.1/> |
+| phpMyAdmin | <http://127.0.0.1/phpmyadmin/> |
+
+---
+
+## Script batch (`CmdCommands`)
+
+I comandi di avvio e stop eseguiti da `main.py` richiamano direttamente gli script `.bat` situati nella cartella `CmdCommands/`:
+
+- `main.py` passa la posizione assoluta del servizio come **primo argomento** (`%~1`) e imposta la variabile d'ambiente `%SERVICE_POSITION%`.
+- Gli script utilizzano questo parametro per avviare o arrestare i relativi binari:
+  - `sv_apache.bat`: avvia `%SERVICE_DIR%\bin\httpd.exe` in background.
+  - `sv_mysql.bat`: avvia `%SERVICE_DIR%\bin\mysqld.exe` specificando `--defaults-file="%SERVICE_DIR%\my.ini"`.
+  - `stop_apache.bat`: termina il processo `httpd.exe` con `taskkill`.
+  - `stop_mysql.bat`: termina il processo `mysqld.exe` con `taskkill`.
 
 ---
 
 ## Note di sicurezza
 
-- Apache è in ascolto **solo** su `127.0.0.1`: il server non è raggiungibile da altri host della rete.
-- L'accesso all'intero file system è negato di default (`<Directory />` → `Require all denied`); è consentita solo la `DocumentRoot`.
+- Apache è in ascolto **esclusivamente** su `127.0.0.1`: il server non è raggiungibile da altri host della rete locale o esterna.
+- L'accesso al file system è negato di default (`<Directory />` → `Require all denied`); è consentita solo la `DocumentRoot`.
 - I file `.ht*` non sono serviti al client.
 - `env.conf` e `.env` contengono configurazioni locali e **non** devono essere versionati.
 - Con `mysqld --initialize-insecure` l'utente `root` non ha password: impostarne una prima di qualsiasi utilizzo non strettamente locale.
 - `Options Indexes` abilita il listing delle directory prive di file indice; rimuoverlo se non necessario.
-
-```ini
-extension=mbstring
-extension=openssl
-extension=zip
-```
-
-> **Nota:** un percorso relativo in `extension_dir` (es. `"./ext"`) viene risolto rispetto alla directory di lavoro del processo `httpd.exe`, non a quella di PHP. In caso di errori di caricamento delle estensioni, usare il percorso assoluto, ad esempio `extension_dir = "C:/Users/salvo/Documents/GitHub/Servizi/php-8.5.12x64/ext"`.
-
-Verifica dei moduli caricati:
-
-```powershell
-..\Servizi\php-8.5.12x64\php.exe -m
-```
-
----
