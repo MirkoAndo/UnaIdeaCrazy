@@ -1600,6 +1600,6 @@ yield _gettext("Go");
 
     public function getSourceContext()
     {
-        return new Source("", "server/privileges/privileges_table.twig", "C:\\Users\\mirko\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\server\\privileges\\privileges_table.twig");
+        return new Source("", "server/privileges/privileges_table.twig", "C:\\Users\\salvo\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\server\\privileges\\privileges_table.twig");
     }
 }

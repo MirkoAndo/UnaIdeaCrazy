@@ -316,6 +316,6 @@ yield _gettext("This method requires using an '<em>SSL connection</em>' or an '<
 
     public function getSourceContext()
     {
-        return new Source("", "server/privileges/login_information_fields.twig", "C:\\Users\\mirko\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\server\\privileges\\login_information_fields.twig");
+        return new Source("", "server/privileges/login_information_fields.twig", "C:\\Users\\salvo\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\server\\privileges\\login_information_fields.twig");
     }
 }

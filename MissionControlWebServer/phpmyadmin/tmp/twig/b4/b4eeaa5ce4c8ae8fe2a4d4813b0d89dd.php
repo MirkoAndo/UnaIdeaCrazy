@@ -218,6 +218,6 @@ yield _gettext("Go");
 
     public function getSourceContext()
     {
-        return new Source("", "server/privileges/change_password.twig", "C:\\Users\\mirko\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\server\\privileges\\change_password.twig");
+        return new Source("", "server/privileges/change_password.twig", "C:\\Users\\salvo\\Documents\\GitHub\\UnaIdeaCrazy\\MissionControlWebServer\\phpmyadmin\\templates\\server\\privileges\\change_password.twig");
     }
 }
