@@ -1,11 +1,11 @@
 # UnaIdeaCrazy – Mission Control
 
-Web application locale per Windows che unisce due moduli:
+Piattaforma locale per Windows che unisce una web application portabile e un pannello di controllo desktop interattivo (GUI):
 
 - **My Cloud** – gestione di file sul file system locale.
-- **Mission Control** – monitoraggio dello stato e gestione dei servizi (Apache, MySQL, Python).
+- **Mission Control** – monitoraggio dello stato in tempo reale, telemetria hardware, diagnostica porte TCP e orchestrazione dei servizi (**Apache**, **MySQL**, **PHP**, **Python**).
 
-Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come modulo Apache), **MySQL** e uno script **Python** interattivo di monitoraggio (`main.py`). Tutti i servizi sono eseguiti in modalità portabile, senza installazione di sistema, e sono raggiungibili esclusivamente da `localhost`.
+Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come modulo DSO nativo in Apache), **MySQL Server 26.10.0** e un'applicazione desktop **Python GUI (`tkinter` / `ttk`)** modulare avviabile da `main.py`. Tutti i servizi sono eseguiti in modalità portabile, senza installazione di sistema, e sono raggiungibili esclusivamente da `localhost` (`127.0.0.1`).
 
 ---
 
@@ -13,12 +13,13 @@ Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come m
 
 1. [Requisiti e Download](#requisiti-e-download)
 2. [Struttura delle directory](#struttura-delle-directory)
-3. [Configurazione di Apache](#configurazione-di-apache)
-4. [Configurazione di PHP](#configurazione-di-php)
-5. [Configurazione di MySQL (`my.ini`)](#configurazione-di-mysql-myini)
-6. [Avvio dei servizi e comandi CLI](#avvio-dei-servizi-e-comandi-cli)
-7. [Script batch (`CmdCommands`)](#script-batch-cmdcommands)
-8. [Note di sicurezza](#note-di-sicurezza)
+3. [Architettura Modulare Python (`mission_control`)](#architettura-modulare-python-mission_control)
+4. [Configurazione di Apache](#configurazione-di-apache)
+5. [Configurazione di PHP](#configurazione-di-php)
+6. [Configurazione di MySQL (`my.ini`)](#configurazione-di-mysql-myini)
+7. [Avvio dell'Applicazione GUI e Comandi](#avvio-dellapplicazione-gui-e-comandi)
+8. [Script batch (`CmdCommands`)](#script-batch-cmdcommands)
+9. [Note di sicurezza](#note-di-sicurezza)
 
 ---
 
@@ -32,7 +33,7 @@ Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come m
 | PHP | 8.5.x x64 (`php-8.5.12x64`) | [PHP for Windows](https://windows.php.net/download/) | Build **VS17 x64 Thread Safe (TS)**, necessaria per `php8apache2_4.dll` |
 | MySQL Server | 8.x / 26.x (`mysql-26.10.0`) | [MySQL Community Server](https://dev.mysql.com/downloads/mysql/) | Selezionare **Windows (x86, 64-bit), ZIP Archive** |
 | phpMyAdmin | 5.2.3 | [phpMyAdmin Downloads](https://www.phpmyadmin.net/downloads/) | Già presente in `MissionControlWebServer/phpmyadmin` |
-| Python | 3.10+ | [Python Official Site](https://www.python.org/downloads/) | Richiede `wmi` (`pip install wmi`) |
+| Python | 3.10+ | [Python Official Site](https://www.python.org/downloads/) | Include `tkinter`/`ttk` e `socket`; richiede `wmi` (`pip install wmi`) |
 
 > [!IMPORTANT]
 > La versione **Non Thread Safe (NTS)** di PHP **non** contiene `php8apache2_4.dll` e non può essere caricata come modulo nativo di Apache. Scaricare sempre la variante **Thread Safe (TS)**.
@@ -47,31 +48,63 @@ Il progetto presuppone che i servizi siano estratti in una cartella `Servizi_Una
 GitHub/
 ├── Servizi_UnaIdeaCrazy/
 │   ├── Apache24/
+│   │   ├── bin/
+│   │   │   └── httpd.exe               # Binario Apache monitorato via WMI
 │   │   └── conf/
 │   │       ├── env.conf                # Variabili d'ambiente locali (non versionato)
 │   │       └── httpd.conf              # Configurazione principale Apache
 │   ├── mysql-26.10.0/
 │   │   ├── bin/
-│   │   ├── data/                       # Directory dei database
-│   │   └── my.ini                      # Configurazione MySQL
+│   │   │   └── mysqld.exe              # Demone MySQL monitorato via WMI
+│   │   ├── data/                       # Directory fisica dei database
+│   │   └── my.ini                      # Configurazione MySQL (porta 3306)
 │   └── php-8.5.12x64/
-│       ├── ext/
+│       ├── ext/                        # Estensioni PHP (.dll)
+│       ├── php8apache2_4.dll           # Modulo nativo caricato da Apache
 │       └── php.ini                     # Configurazione PHP
 └── UnaIdeaCrazy/
-    ├── CmdCommands/                    # Script batch eseguiti da main.py
+    ├── CmdCommands/                    # Script batch eseguiti dall'applicazione
     │   ├── sv_apache.bat
     │   ├── sv_mysql.bat
     │   ├── stop_apache.bat
     │   └── stop_mysql.bat
-    ├── MissionControlWebServer/        # DocumentRoot di Apache
+    ├── MissionControlWebServer/        # DocumentRoot di Apache (equivalente htdocs/)
     │   ├── index.php
     │   ├── index.html
     │   └── phpmyadmin/
-    ├── Obbiettivi/                     # Specifiche di progetto
-    ├── main.py                         # Monitor CLI e pannello di controllo
+    ├── mission_control/                # Pacchetto Python modulare (GUI, servizi e monitoraggio)
+    │   ├── __init__.py                 # Esportazione API del pacchetto
+    │   ├── config.py                   # Costanti, percorsi, CUSTOM_COMMANDS e lettura config reali
+    │   ├── services.py                 # Controllo processi WMI, stato servizi ed esecuzione .bat
+    │   ├── monitoring.py               # Telemetria CPU/RAM (WMI/Win32) e scanner porte socket
+    │   ├── styles.py                   # Palette colori (ThemeColors) e configurazione ttk.Style
+    │   ├── tab_overview.py             # Tab 1: Card servizi (Apache, MySQL, Sistema) e tabella stato
+    │   ├── tab_commands.py             # Tab 2: Console comandi custom, filtri e ispettore .bat
+    │   ├── tab_monitor.py              # Tab 3: Scanner porte socket (80, 443, 3306) e albero stack
+    │   └── app.py                      # Finestra principale MissionControlGUI
+    ├── Obbiettivi/                     # Specifiche progettuali (Mission Control & My Cloud)
+    ├── main.py                         # Entrypoint principale dell'applicazione desktop GUI
     ├── .env                            # Variabili locali (non versionato)
     └── readme.md
 ```
+
+---
+
+## Architettura Modulare Python (`mission_control`)
+
+Il pannello di controllo desktop è progettato secondo una separazione netta delle responsabilità all'interno del pacchetto `mission_control/`, mantenendo `main.py` snello e leggibile:
+
+| Modulo | Responsabilità Principale |
+|---|---|
+| `main.py` | Entrypoint dell'applicazione: importa il pacchetto `mission_control`, espone le variabili di stato per retrocompatibilità e avvia `MissionControlGUI`. |
+| `mission_control/config.py` | Definisce i percorsi base (`BASE_DIR`, `CMD_COMMANDS_DIR`, `WEB_SERVER_DIR`, `OBBIETTIVI_DIR`), i codici ANSI, `ASCII_logo_service`, `CUSTOM_COMMANDS` e il parser `read_real_service_configs()` per `env.conf` e `my.ini`. |
+| `mission_control/services.py` | Gestisce la rilevazione dei processi tramite WMI (`get_process_status` con fallback `tasklist`), la costruzione di `services_status`, l'esecuzione degli script `.bat` (`execute_batch_command`) e la generazione di `Mission_control_table`. |
+| `mission_control/monitoring.py` | Raccoglie le metriche hardware CPU e RAM (`get_system_metrics` tramite WMI e Win32 API) e verifica l'apertura delle porte locali TCP tramite libreria `socket` (`check_local_port`). |
+| `mission_control/styles.py` | Centralizza la palette cromatica (`ThemeColors`) e applica il tema scuro moderno a tutti i componenti `ttk`. |
+| `mission_control/tab_overview.py` | **Tab 1 – Panoramica & Dati `main.py`**: Card dedicate per **Apache HTTP Server**, **MySQL Database Server** e **Risorse & Hardware** con badge dinamici (`ONLINE`/`OFFLINE` + PID), pulsanti rapidi, tabella `services_status` filtrabile e anteprima live di `Mission_control_table`. |
+| `mission_control/tab_commands.py` | **Tab 2 – Comandi Custom & Script Batch**: Barra di esecuzione comandi interattiva, catalogo filtrabile di `CUSTOM_COMMANDS` e ispettore in sola lettura del codice sorgente dei file `.bat`. |
+| `mission_control/tab_monitor.py` | **Tab 3 – Monitor Porte & Struttura Servizi**: Scanner porte TCP locali (`127.0.0.1:80`, `127.0.0.1:443`, `127.0.0.1:3306` + porta custom) tramite `socket` ed esploratore ad albero della gerarchia reale dello stack con anteprima dei file di configurazione. |
+| `mission_control/app.py` | Finestra principale `MissionControlGUI`: coordina l'header, il `ttk.Notebook`, il pannello di log scorrevole `ScrolledText` in sola lettura, la barra di stato e il ciclo di auto-refresh asincrono. |
 
 ---
 
@@ -271,47 +304,57 @@ cd ..\Servizi_UnaIdeaCrazy\mysql-26.10.0\bin
 
 ---
 
-## Avvio dei servizi e comandi CLI
+## Avvio dell'Applicazione GUI e Comandi
 
-È possibile avviare e monitorare l'intero ambiente tramite la CLI interattiva di `main.py`:
+Per avviare l'applicazione desktop **Mission Control GUI**:
 
 ```powershell
 pip install wmi
 python main.py
 ```
 
-### Comandi disponibili in `main.py`
+### Funzionalità Principali dell'Interfaccia Grafica
 
-Digitando `/help` all'interno della console interattiva, vengono mostrati i comandi disponibili:
+1. **Tab 1 – Panoramica & Dati `main.py`**:
+   - **Card Apache HTTP Server** e **Card MySQL Database Server** con badge di stato in tempo reale (`●  ONLINE  ·  PID ...` / `●  OFFLINE  ·  PID —`), pulsanti rapidi di avvio/arresto (`▶ Avvia`, `⏹ Ferma`), apertura rapida nel browser (`🌐 Web` / `🗄️ Admin`) e apertura della cartella del servizio in Esplora File (`📂 File`).
+   - **Card Risorse & Hardware** con barre di utilizzo **CPU %** e **RAM GB** aggiornate in background tramite WMI e Win32 API.
+   - Tabella interattiva `services_status` con filtro di ricerca e ispettore dettagliato con anteprima di `Mission_control_table`.
+2. **Tab 2 – Comandi Custom & Script Batch**:
+   - Console comandi interattiva (con menu a tendina e campo di input), filtro per servizio e visualizzatore del codice sorgente degli script `.bat` e delle variabili d'ambiente passate (`%1`, `SERVICE_POSITION`, `SERVICE_NAME`).
+3. **Tab 3 – Monitor Porte (`socket`) & Struttura Servizi**:
+   - Scanner di porte TCP locali tramite `socket` per `127.0.0.1:80` (Apache HTTP), `127.0.0.1:443` (Apache HTTPS) e `127.0.0.1:3306` (MySQL), oltre a un tester per porte personalizzate, con indicazione della latenza in millisecondi e del processo WMI associato.
+   - Albero gerarchico interattivo dell'intero stack (`UnaIdeaCrazy` e `Servizi_UnaIdeaCrazy`) con corrispondenza rispetto a un ambiente XAMPP tradizionale e anteprima integrata dei file di configurazione (`env.conf`, `httpd.conf`, `my.ini`, `php.ini`).
 
-| Comando | Descrizione | Azione eseguita |
+### Comandi Custom Supportati
+
+| Comando | Pulsante GUI / Azione | Script Eseguito |
 |---|---|---|
-| `/help` | Mostra la lista dei comandi custom | Stampa la guida a video |
-| `sv apache` | Avvia Apache HTTP Server | Esegue `CmdCommands\sv_apache.bat` |
-| `sv mysql` | Avvia MySQL Server | Esegue `CmdCommands\sv_mysql.bat` |
-| `stop apache` | Ferma Apache | Esegue `CmdCommands\stop_apache.bat` |
-| `stop mysql` | Ferma MySQL | Esegue `CmdCommands\stop_mysql.bat` |
-| `exit` / `quit` | Esce dalla console | Termina l'interfaccia di monitoraggio |
+| `/help` | Pulsante `❓ /help` / Console Tab 2 | Stampa la lista dei comandi custom nel pannello di log |
+| `sv apache` | Pulsante `▶ Avvia` (Card Apache) | Esegue `CmdCommands\sv_apache.bat` |
+| `sv mysql` | Pulsante `▶ Avvia` (Card MySQL) | Esegue `CmdCommands\sv_mysql.bat` |
+| `stop apache` | Pulsante `⏹ Ferma` (Card Apache) | Esegue `CmdCommands\stop_apache.bat` |
+| `stop mysql` | Pulsante `⏹ Ferma` (Card MySQL) | Esegue `CmdCommands\stop_mysql.bat` |
+| `exit` / `quit` | Chiusura finestra / Console Tab 2 | Chiude l'applicazione Mission Control GUI |
 
 ### URL delle risorse Web
 
 | Risorsa | URL |
 |---|---|
-| Mission Control | <http://127.0.0.1/> |
+| Mission Control Web App | <http://127.0.0.1/> |
 | phpMyAdmin | <http://127.0.0.1/phpmyadmin/> |
 
 ---
 
 ## Script batch (`CmdCommands`)
 
-I comandi di avvio e stop eseguiti da `main.py` richiamano direttamente gli script `.bat` situati nella cartella `CmdCommands/`:
+I comandi di avvio e stop richiamano gli script `.bat` situati nella cartella `CmdCommands/`:
 
-- `main.py` passa la posizione assoluta del servizio come **primo argomento** (`%~1`) e imposta la variabile d'ambiente `%SERVICE_POSITION%`.
+- `execute_batch_command()` passa la posizione assoluta del servizio come **primo argomento** (`%~1`) e imposta le variabili d'ambiente `%SERVICE_POSITION%` e `%SERVICE_NAME%`.
 - Gli script utilizzano questo parametro per avviare o arrestare i relativi binari:
   - `sv_apache.bat`: avvia `%SERVICE_DIR%\bin\httpd.exe` in background.
   - `sv_mysql.bat`: avvia `%SERVICE_DIR%\bin\mysqld.exe` specificando `--defaults-file="%SERVICE_DIR%\my.ini"`.
-  - `stop_apache.bat`: termina il processo `httpd.exe` con `taskkill`.
-  - `stop_mysql.bat`: termina il processo `mysqld.exe` con `taskkill`.
+  - `stop_apache.bat`: termina il processo `httpd.exe` con `taskkill` (richiedendo elevazione UAC se necessario).
+  - `stop_mysql.bat`: termina il processo `mysqld.exe` con `taskkill` (richiedendo elevazione UAC se necessario).
 
 ---
 
