@@ -11,8 +11,12 @@ os.system('')
 # Percorsi principali del progetto (rispetto alla radice del repository)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CMD_COMMANDS_DIR = os.path.join(BASE_DIR, "CmdCommands")
-WEB_SERVER_DIR = os.path.join(BASE_DIR, "MissionControlWebServer")
+WEB_SERVER_DIR = os.path.join(BASE_DIR, "OcchioDiFalcoWebServer")
 OBBIETTIVI_DIR = os.path.join(BASE_DIR, "Obbiettivi")
+
+# Host e porta predefiniti per il listener HTTP/API di OcchioDiFalco (richieste dal client web)
+DEFAULT_API_HOST = "127.0.0.1"
+DEFAULT_API_PORT = 5050
 
 # Codici ANSI originali (preservati per compatibilità)
 RED = "\033[91m"
@@ -24,7 +28,7 @@ RESET = "\033[0m"
 
 # Posizioni relative dei servizi (come definite nello script originale)
 SERVICE_POSITIONS = {
-    "mission_control": "localset",
+    "occhio_di_falco": "localset",
     "APACHE": "../Servizi_UnaIdeaCrazy/Apache24",
     "MYSQL": "../Servizi_UnaIdeaCrazy/mysql-26.10.0",
     "PHP": "../Servizi_UnaIdeaCrazy/php-8.5.12x64",

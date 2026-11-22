@@ -46,6 +46,9 @@ def get_system_metrics(include_wmi_cpu=True):
 
     # Query WMI (Win32_Processor & Win32_OperatingSystem)
     if include_wmi_cpu:
+        w = None
+        processors = None
+        operating_system = None
         try:
             try:
                 import pythoncom
@@ -64,6 +67,9 @@ def get_system_metrics(include_wmi_cpu=True):
         except Exception:
             pass
         finally:
+            operating_system = None
+            processors = None
+            w = None
             try:
                 import pythoncom
                 pythoncom.CoUninitialize()

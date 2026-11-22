@@ -71,7 +71,7 @@ E visualizzi tutto.
 
 Questo sarebbe un ottimo modo per inserire Python + matematica + dati + backend nello stesso progetto.
 
-📊 11. "Mission Control"
+📊 11. "OcchioDiFalco"
 
 Questa mi piace concettualmente.
 
@@ -80,7 +80,7 @@ Un'unica dashboard che controlla una piccola infrastruttura.
 Tipo:
 
 ╔══════════════════════════════════════╗
-║           MISSION CONTROL            ║
+║           OCCHIO DI FALCO            ║
 ╠══════════════════════════════════════╣
 ║ SERVER       ONLINE                  ║
 ║ DATABASE     ONLINE                  ║
@@ -170,7 +170,7 @@ E da lì controlli tutto.
 
 
 ┌──────────────────────────────────────────────┐
-│                 MISSION CONTROL              │
+│                 OCCHIO DI FALCO              │
 └──────────────────────┬───────────────────────┘
                        │
                  monitoring
@@ -226,7 +226,7 @@ E da lì controlli tutto.
                           │
           ┌───────────────┴───────────────┐
           │                               │
-       STORAGE                       MISSION CONTROL
+       STORAGE                       OCCHIO DI FALCO
           │                               │
    upload/download                 monitoring system
    users/permissions               health checks
@@ -320,7 +320,7 @@ Filesystem
                            │
                     ┌──────┴──────┐
                     │             │
-                 CLOUD      MISSION CONTROL
+                 CLOUD      OCCHIO DI FALCO
                     │             │
               ┌─────┴─────┐   ┌───┴────────────┐
               │           │   │                │
@@ -339,7 +339,7 @@ Filesystem
 avvio processo
      │
      ▼
-Mission Control cerca il PID
+OcchioDiFalco cerca il PID
      │
    ┌─┴──────────┐
    │            │

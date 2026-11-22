@@ -132,7 +132,7 @@ def apply_theme_styles(root):
         selectforeground=[("readonly", "#ffffff")]
     )
 
-    # Checkbutton & Progressbar
+    # Checkbutton, Radiobutton & Progressbar
     style.configure(
         "TCheckbutton",
         background=c.BG_MAIN,
@@ -140,6 +140,26 @@ def apply_theme_styles(root):
         font=("Segoe UI", 9)
     )
     style.map("TCheckbutton", background=[("active", c.BG_MAIN)])
+
+    style.configure(
+        "Card.TCheckbutton",
+        background=c.BG_CARD,
+        foreground=c.FG_TEXT,
+        font=("Segoe UI", 9)
+    )
+    style.map("Card.TCheckbutton", background=[("active", c.BG_CARD)])
+
+    style.configure(
+        "TRadiobutton",
+        background=c.BG_CARD,
+        foreground=c.FG_TEXT,
+        font=("Segoe UI", 9, "bold")
+    )
+    style.map(
+        "TRadiobutton",
+        background=[("active", c.BG_CARD)],
+        foreground=[("selected", c.ACCENT_BLUE), ("active", "#ffffff")]
+    )
 
     style.configure(
         "Horizontal.TProgressbar",

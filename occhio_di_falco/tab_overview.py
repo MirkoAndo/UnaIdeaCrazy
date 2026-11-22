@@ -1,7 +1,7 @@
 """
 Tab 1 - Panoramica & Dati `main.py`:
 Controllo rapido dei servizi (Apache, MySQL) tramite card dedicate,
-indicatori CPU/RAM, tabella interattiva `services_status` e anteprima `Mission_control_table`.
+indicatori CPU/RAM, tabella interattiva `services_status` e anteprima `Occhio_di_falco_table`.
 """
 
 import os
@@ -10,12 +10,12 @@ from tkinter import ttk, messagebox
 from tkinter.scrolledtext import ScrolledText
 
 from .config import BASE_DIR, strip_ansi
-from .services import format_mission_control_table
+from .services import format_occhio_di_falco_table
 from .styles import ThemeColors
 
 
 class OverviewTab(ttk.Frame):
-    """Scheda 1: Panoramica dei servizi con card individuali, telemetria CPU/RAM e tabella Mission Control."""
+    """Scheda 1: Panoramica dei servizi con card individuali, telemetria CPU/RAM e tabella OcchioDiFalco."""
 
     def __init__(self, parent, app):
         super().__init__(parent, padding=10)
@@ -65,7 +65,7 @@ class OverviewTab(ttk.Frame):
         ).pack(anchor="w")
         ttk.Label(
             ap_meta,
-            text="DocRoot: MissionControlWebServer  (PHP DSO)",
+            text="DocRoot: OcchioDiFalcoWebServer  (PHP DSO)",
             style="Muted.TLabel"
         ).pack(anchor="w", pady=(1, 0))
 
@@ -210,7 +210,7 @@ class OverviewTab(ttk.Frame):
         sys_footer.pack(fill="x", pady=(5, 0))
         ttk.Label(
             sys_footer,
-            text=f"Mission Control: PID {os.getpid()}",
+            text=f"OcchioDiFalco: PID {os.getpid()}",
             style="Muted.TLabel"
         ).pack(side="left")
         ttk.Label(
@@ -220,7 +220,7 @@ class OverviewTab(ttk.Frame):
         ).pack(side="right")
 
         # =====================================================================
-        # PARTE CENTRALE: TABELLA SERVICES_STATUS + ISPETTORE MISSION_CONTROL
+        # PARTE CENTRALE: TABELLA SERVICES_STATUS + ISPETTORE OCCHIO_DI_FALCO
         # =====================================================================
         mid_pane = ttk.PanedWindow(self, orient="horizontal")
         mid_pane.pack(fill="both", expand=True)
@@ -278,13 +278,13 @@ class OverviewTab(ttk.Frame):
             command=self._open_selected_service_link
         ).pack(side="left", padx=3)
 
-        # Pannello di dettaglio + anteprima `Mission_control_table`
+        # Pannello di dettaglio + anteprima `Occhio_di_falco_table`
         detail_card = ttk.Frame(mid_pane, style="Card.TFrame", padding=10)
         mid_pane.add(detail_card, weight=2)
 
         ttk.Label(
             detail_card,
-            text="Ispettore Servizio & Tabella `Mission_control_table`",
+            text="Ispettore Servizio & Tabella `Occhio_di_falco_table`",
             style="CardTitle.TLabel"
         ).pack(anchor="w", pady=(0, 6))
 
@@ -403,7 +403,7 @@ class OverviewTab(ttk.Frame):
         abs_pos = BASE_DIR if pos == "localset" else os.path.abspath(os.path.join(BASE_DIR, pos))
         status_clean = strip_ansi(info.get("status"))
 
-        table_preview = format_mission_control_table(
+        table_preview = format_occhio_di_falco_table(
             self.app.services,
             self.app.system_metrics["cpu_usage"],
             self.app.system_metrics["ram_usage"]
@@ -419,7 +419,7 @@ class OverviewTab(ttk.Frame):
             f"Percorso Abs : {abs_pos}\n"
             f"Esiste Disco : {'Sì' if os.path.exists(abs_pos) else 'No'}\n"
             f"Link Web     : {info.get('link') or 'Nessuno'}\n\n"
-            f"=== ANTEPRIMA MISSION_CONTROL_TABLE (main.py) ===\n"
+            f"=== ANTEPRIMA OCCHIO_DI_FALCO_TABLE (main.py) ===\n"
             f"{table_preview}\n"
         )
 

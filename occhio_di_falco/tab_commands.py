@@ -162,8 +162,8 @@ class CommandsTab(ttk.Frame):
             exists = "✔ Presente" if os.path.exists(bat_path) else "✖ Mancante"
             all_rows.append((cmd, info["service"], info["desc"], info["process"], bat_name, exists))
 
-        all_rows.append(("/help", "SISTEMA", "mostra la lista dei comandi custom", "MissionControlGUI", "-", "Integrato"))
-        all_rows.append(("exit / quit", "SISTEMA", "chiude l'applicazione Mission Control", "MissionControlGUI", "-", "Integrato"))
+        all_rows.append(("/help", "SISTEMA", "mostra la lista dei comandi custom", "OcchioDiFalcoGUI", "-", "Integrato"))
+        all_rows.append(("exit / quit", "SISTEMA", "chiude l'applicazione OcchioDiFalco", "OcchioDiFalcoGUI", "-", "Integrato"))
 
         for row in all_rows:
             cmd, srv, desc, proc, bat_name, exists = row
@@ -221,7 +221,7 @@ class CommandsTab(ttk.Frame):
         else:
             preview = (
                 "=== COMANDO INTEGRATO: exit / quit ===\n\n"
-                "Termina l'esecuzione di Mission Control (equivalente a `if clean_input in ('exit', 'quit'): break`)."
+                "Termina l'esecuzione di OcchioDiFalco (equivalente a `if clean_input in ('exit', 'quit'): break`)."
             )
 
         self.bat_preview_text.configure(state="normal")

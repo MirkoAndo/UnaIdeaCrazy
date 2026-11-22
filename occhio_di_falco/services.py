@@ -1,6 +1,6 @@
 """
-Gestione dei servizi (Apache, MySQL, PHP, Mission Control), verifica processi WMI,
-esecuzione degli script batch (.bat) e formattazione della tabella Mission Control.
+Gestione dei servizi (Apache, MySQL, PHP, OcchioDiFalco), verifica processi WMI,
+esecuzione degli script batch (.bat) e formattazione della tabella OcchioDiFalco.
 """
 
 import os
@@ -23,6 +23,8 @@ def get_process_status(process_name):
     Verifica lo stato di un processo Windows tramite WMI (funzione originale preservata).
     Supporta anche l'invocazione da thread secondari tramite inizializzazione COM.
     """
+    c = None
+    process = None
     try:
         try:
             import pythoncom
@@ -31,8 +33,11 @@ def get_process_status(process_name):
             pass
         c = wmi.WMI()
         for process in c.Win32_Process(name=process_name):
+            pid = process.ProcessId
+            process = None
+            c = None
             # Keep the rendered status width equal to OFFLINE so the links stay aligned.
-            return f"{GREEN}ONLINE  {RESET}", process.ProcessId
+            return f"{GREEN}ONLINE  {RESET}", pid
     except Exception:
         # Fallback rapido tramite tasklist qualora WMI fosse occupato nel thread
         try:
@@ -49,6 +54,8 @@ def get_process_status(process_name):
         except Exception:
             pass
     finally:
+        process = None
+        c = None
         try:
             import pythoncom
             pythoncom.CoUninitialize()
@@ -60,13 +67,13 @@ def get_process_status(process_name):
 def build_services_status(apachestatus, mysqlstatus):
     """Costruisce e restituisce il dizionario services_status originale."""
     return {
-        "mission_control": {
+        "occhio_di_falco": {
             "status": f"{GREEN}ONLINE {RESET}",
             "pid": os.getpid(),
-            "position": SERVICE_POSITIONS["mission_control"],
+            "position": SERVICE_POSITIONS["occhio_di_falco"],
             "process": "python.exe",
             "link": "",
-            "role": "Orchestratore Python & GUI Mission Control"
+            "role": "Orchestratore Python & GUI OcchioDiFalco"
         },
         "APACHE": {
             "status": apachestatus[0],
@@ -74,7 +81,7 @@ def build_services_status(apachestatus, mysqlstatus):
             "position": SERVICE_POSITIONS["APACHE"],
             "process": "httpd.exe",
             "link": "http://127.0.0.1/",
-            "role": "Apache HTTP Server 2.4 (DocumentRoot: MissionControlWebServer)"
+            "role": "Apache HTTP Server 2.4 (DocumentRoot: OcchioDiFalcoWebServer)"
         },
         "MYSQL": {
             "status": mysqlstatus[0],
@@ -148,10 +155,10 @@ def execute_batch_command(cmd_name, service_key, services, log_callback=None):
         return False
 
 
-def format_mission_control_table(services, cpu_usage, ram_usage):
-    """Genera la tabella testuale Mission_control_table originale (senza codici ANSI)."""
-    mc_status = strip_ansi(services['mission_control']['status'])
-    mc_pid = services['mission_control']['pid']
+def format_occhio_di_falco_table(services, cpu_usage, ram_usage):
+    """Genera la tabella testuale Occhio_di_falco_table originale (senza codici ANSI)."""
+    odf_status = strip_ansi(services['occhio_di_falco']['status'])
+    odf_pid = services['occhio_di_falco']['pid']
     ap_status = strip_ansi(services['APACHE']['status'])
     ap_pid = str(services['APACHE']['pid'])
     my_status = strip_ansi(services['MYSQL']['status'])
@@ -159,7 +166,7 @@ def format_mission_control_table(services, cpu_usage, ram_usage):
 
     return (
         f"┌──────────────────────────────────────────────────────────────────────┐\n"
-        f"│  MISSION CONTROL  ● {mc_status:<8}     PID {mc_pid:<31}│\n"
+        f"│  OCCHIO DI FALCO  ● {odf_status:<8}     PID {odf_pid:<32}│\n"
         f"├──────────────────────────────────────────────────────────────────────┤\n"
         f"│  SERVIZI                                                             │\n"
         f"│                                                                      │\n"

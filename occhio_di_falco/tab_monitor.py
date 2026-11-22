@@ -10,7 +10,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter.scrolledtext import ScrolledText
 
-from .config import BASE_DIR, CMD_COMMANDS_DIR, WEB_SERVER_DIR, OBBIETTIVI_DIR, strip_ansi
+from .config import BASE_DIR, CMD_COMMANDS_DIR, WEB_SERVER_DIR, OBBIETTIVI_DIR, DEFAULT_API_PORT, strip_ansi
 from .monitoring import check_local_port
 from .styles import ThemeColors
 
@@ -87,7 +87,7 @@ class MonitorTab(ttk.Frame):
         tree_top.pack(fill="x", pady=(0, 6))
         ttk.Label(
             tree_top,
-            text="📁 Gerarchia Reale Stack (`Servizi_UnaIdeaCrazy` & `MissionControlWebServer`)",
+            text="📁 Gerarchia Reale Stack (`Servizi_UnaIdeaCrazy` & `OcchioDiFalcoWebServer`)",
             style="CardTitle.TLabel"
         ).pack(side="left")
 
@@ -171,6 +171,12 @@ class MonitorTab(ttk.Frame):
                 f"mysqld.exe ({my_clean}, PID {my_pid})",
                 f"mysql-26.10.0/my.ini -> port={cfg['mysql_port']}"
             ),
+            (
+                DEFAULT_API_PORT,
+                "OcchioDiFalco Python API Listener",
+                f"python.exe (ONLINE, PID {os.getpid()})",
+                f"occhio_di_falco/tab_requests.py -> http://127.0.0.1:{DEFAULT_API_PORT}/api/health"
+            ),
         ]
 
         for port, srv_name, wmi_info, cfg_src in port_specs:
@@ -193,12 +199,12 @@ class MonitorTab(ttk.Frame):
             )
 
     def scan_standard_ports(self):
-        """Esegue una verifica immediata su 127.0.0.1:80, 127.0.0.1:443, 127.0.0.1:3306."""
-        self.app.log_message("Avvio scansione socket su 127.0.0.1:80, 127.0.0.1:443, 127.0.0.1:3306...", "CMD")
+        """Esegue una verifica immediata su 127.0.0.1:80, 443, 3306, 5050."""
+        self.app.log_message(f"Avvio scansione socket su 127.0.0.1:80, 443, 3306, {DEFAULT_API_PORT}...", "CMD")
 
         def _worker():
             results = {}
-            for p in (80, 443, 3306):
+            for p in (80, 443, 3306, DEFAULT_API_PORT):
                 is_open, lat, detail = check_local_port("127.0.0.1", p)
                 results[p] = (is_open, lat, detail)
                 state_lbl = "APERTA" if is_open else "CHIUSA"
@@ -211,7 +217,7 @@ class MonitorTab(ttk.Frame):
                 self.app.port_results = results
                 self.update_ports_tree()
 
-            self.after(0, _apply)
+            self.app.enqueue_ui(_apply)
 
         threading.Thread(target=_worker, daemon=True).start()
 
@@ -248,13 +254,16 @@ class MonitorTab(ttk.Frame):
 
         docroot_node = self.struct_tree.insert(
             repo_node, "end",
-            text="🌐 MissionControlWebServer/",
+            text="🌐 OcchioDiFalcoWebServer/",
             values=("DocumentRoot di Apache (definita in env.conf)", "htdocs/", WEB_SERVER_DIR),
             open=True
         )
         for sub_name, role_desc, xampp_eq in [
-            ("index.php", "Entrypoint PHP predefinito (DirectoryIndex)", "htdocs/index.php"),
-            ("index.html", "Pagina statica di fallback", "htdocs/index.html"),
+            ("index.php", "Landing page principale PHP (DirectoryIndex)", "htdocs/index.php"),
+            (os.path.join("style-root", "landing.css"), "Foglio di stile CSS della landing page", "htdocs/style-root/landing.css"),
+            ("occhio-di-falco", "Servizio #1: Server Health Checker & Telemetria", "htdocs/occhio-di-falco/"),
+            ("my-cloud", "Servizio #2: My Cloud / FTP File Server", "htdocs/my-cloud/"),
+            ("discovery-server", "Servizio #3: Discovery Server (Web Server Provider)", "htdocs/discovery-server/"),
             ("phpmyadmin", "phpMyAdmin 5.2.3 (Gestione MySQL via Web)", "htdocs/phpmyadmin/"),
         ]:
             sub_path = os.path.join(WEB_SERVER_DIR, sub_name)
@@ -288,13 +297,13 @@ class MonitorTab(ttk.Frame):
 
         self.struct_tree.insert(
             repo_node, "end",
-            text="🐍 main.py",
-            values=("Entrypoint principale Mission Control", "xampp-control.exe", os.path.join(BASE_DIR, "main.py"))
+            text="🐍 main.pyw",
+            values=("Entrypoint principale OcchioDiFalco (GUI)", "xampp-control.exe", os.path.join(BASE_DIR, "main.pyw"))
         )
         self.struct_tree.insert(
             repo_node, "end",
-            text="🧩 mission_control/",
-            values=("Pacchetto Python modulare (GUI, servizi, monitoraggio)", "src/", os.path.join(BASE_DIR, "mission_control"))
+            text="🧩 occhio_di_falco/",
+            values=("Pacchetto Python modulare (GUI, servizi, monitoraggio)", "src/", os.path.join(BASE_DIR, "occhio_di_falco"))
         )
         self.struct_tree.insert(
             repo_node, "end",
@@ -304,7 +313,7 @@ class MonitorTab(ttk.Frame):
         self.struct_tree.insert(
             repo_node, "end",
             text="🎯 Obbiettivi/",
-            values=("Specifiche progettuali (Mission Control & My Cloud)", "docs/", OBBIETTIVI_DIR)
+            values=("Specifiche progettuali (OcchioDiFalco & My Cloud)", "docs/", OBBIETTIVI_DIR)
         )
 
         srv_root_node = self.struct_tree.insert(

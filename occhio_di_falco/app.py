@@ -1,11 +1,12 @@
 """
-Finestra principale `MissionControlGUI(tk.Tk)`:
-Coordina l'header, il `ttk.Notebook` con le 3 schede modulari,
+Finestra principale `OcchioDiFalcoGUI(tk.Tk)`:
+Coordina l'header, il `ttk.Notebook` con le 4 schede modulari,
 il pannello di log scorrevole, la barra di stato e il ciclo di aggiornamento in background.
 """
 
 import os
 import time
+import queue
 import threading
 import subprocess
 import webbrowser
@@ -18,6 +19,7 @@ from .config import (
     BASE_DIR,
     ASCII_logo_service,
     CUSTOM_COMMANDS,
+    DEFAULT_API_PORT,
     strip_ansi,
     read_real_service_configs,
 )
@@ -31,17 +33,18 @@ from .styles import ThemeColors, apply_theme_styles
 from .tab_overview import OverviewTab
 from .tab_commands import CommandsTab
 from .tab_monitor import MonitorTab
+from .tab_requests import RequestsTab
 
 
-class MissionControlGUI(tk.Tk):
+class OcchioDiFalcoGUI(tk.Tk):
     """
-    Applicazione Desktop GUI per UnaIdeaCrazy - Mission Control.
+    Applicazione Desktop GUI per UnaIdeaCrazy - OcchioDiFalco.
     Assembla i moduli separati mantenendo il 100% della logica di `main.py`.
     """
 
     def __init__(self):
         super().__init__()
-        self.title("UnaIdeaCrazy — Mission Control & Stack Monitor (GUI)")
+        self.title("UnaIdeaCrazy — OcchioDiFalco & Stack Monitor (GUI)")
         self.geometry("1280x860")
         self.minsize(1080, 740)
         self.configure(bg=ThemeColors.BG_MAIN)
@@ -63,21 +66,56 @@ class MissionControlGUI(tk.Tk):
         self.is_refreshing = False
         self.port_results = {}
         self.last_user_input = ""
+        self._app_ui_queue = queue.Queue()
 
         # Configurazione stili e componenti UI
         self.style = apply_theme_styles(self)
         self._build_header()
         self._build_notebook()
         self._build_log_and_statusbar()
+        self._poll_app_ui_queue()
 
-        # Avvio log e primo ciclo di lettura
-        self.log_message("Mission Control GUI avviato con successo (architettura modulare).", "SUCCESS")
+        # Avvio log, avvio automatico Listener HTTP e primo ciclo di lettura
+        self.log_message("OcchioDiFalco GUI avviato con successo (architettura modulare).", "SUCCESS")
         self.log_message(
-            f"Directory base progetto: {BASE_DIR} | PID Mission Control: {os.getpid()}",
+            f"Directory base progetto: {BASE_DIR} | PID OcchioDiFalco: {os.getpid()}",
             "INFO"
         )
+        self.tab_requests.start_listener(silent=True)
+        self.protocol("WM_DELETE_WINDOW", self._on_window_close)
         self.refresh_all_data(initial=True)
         self._schedule_auto_refresh()
+
+    def enqueue_ui(self, callback):
+        """Accoda una funzione da eseguire in modo thread-safe nel main loop di Tkinter."""
+        if threading.current_thread() is threading.main_thread():
+            try:
+                callback()
+            except Exception:
+                pass
+        else:
+            self._app_ui_queue.put(callback)
+
+    def _poll_app_ui_queue(self):
+        try:
+            while True:
+                cb = self._app_ui_queue.get_nowait()
+                try:
+                    cb()
+                except Exception:
+                    pass
+        except queue.Empty:
+            pass
+        if self.winfo_exists():
+            self.after(100, self._poll_app_ui_queue)
+
+    def _on_window_close(self):
+        """Arresta il listener HTTP in background prima di chiudere la finestra GUI."""
+        try:
+            self.tab_requests.stop_listener()
+        except Exception:
+            pass
+        self.destroy()
 
     # =========================================================================
     # HEADER SUPERIORE
@@ -94,7 +132,7 @@ class MissionControlGUI(tk.Tk):
 
         ttk.Label(
             title_row,
-            text="🛰️ MISSION CONTROL — UnaIdeaCrazy",
+            text="🦅 OCCHIO DI FALCO — UnaIdeaCrazy",
             style="Header.TLabel"
         ).pack(side="left")
 
@@ -167,7 +205,7 @@ class MissionControlGUI(tk.Tk):
         ).pack(side="left", padx=6)
 
     # =========================================================================
-    # NOTEBOOK CON LE 3 SCHEDE SEPARATE
+    # NOTEBOOK CON LE 4 SCHEDE SEPARATE
     # =========================================================================
     def _build_notebook(self):
         self.notebook = ttk.Notebook(self)
@@ -176,7 +214,7 @@ class MissionControlGUI(tk.Tk):
         self.tab_overview = OverviewTab(self.notebook, app=self)
         self.notebook.add(
             self.tab_overview,
-            text="📊 Tab 1 - Panoramica & Dati main.py"
+            text="📊 Tab 1 - Panoramica & Dati main.pyw"
         )
 
         self.tab_commands = CommandsTab(self.notebook, app=self)
@@ -188,7 +226,13 @@ class MissionControlGUI(tk.Tk):
         self.tab_monitor = MonitorTab(self.notebook, app=self)
         self.notebook.add(
             self.tab_monitor,
-            text="🔍 Tab 3 - Monitor Porte & Struttura Servizi (XAMPP-like)"
+            text="🔍 Tab 3 - Monitor Porte & Struttura Servizi"
+        )
+
+        self.tab_requests = RequestsTab(self.notebook, app=self)
+        self.notebook.add(
+            self.tab_requests,
+            text="📡 Tab 4 - Listener Richieste & Console Risposte"
         )
 
     # =========================================================================
@@ -274,7 +318,7 @@ class MissionControlGUI(tk.Tk):
         if threading.current_thread() is threading.main_thread():
             _append()
         else:
-            self.after(0, _append)
+            self.enqueue_ui(_append)
 
     def clear_log(self):
         self.log_box.configure(state="normal")
@@ -316,8 +360,7 @@ class MissionControlGUI(tk.Tk):
         def _worker():
             execute_batch_command(clean_input, cmd_info["service"], self.services, log_callback=self.log_message)
             time.sleep(0.8)
-            if self.winfo_exists():
-                self.after(0, self.refresh_all_data)
+            self.enqueue_ui(self.refresh_all_data)
 
         threading.Thread(target=_worker, daemon=True).start()
 
@@ -335,7 +378,7 @@ class MissionControlGUI(tk.Tk):
             return
 
         if clean_input in ("exit", "quit"):
-            if messagebox.askyesno("Conferma Uscita", "Vuoi chiudere Mission Control?"):
+            if messagebox.askyesno("Conferma Uscita", "Vuoi chiudere OcchioDiFalco?"):
                 self.log_message("Exiting the program.", "INFO")
                 self.destroy()
             return
@@ -399,10 +442,10 @@ class MissionControlGUI(tk.Tk):
                 p80 = check_local_port("127.0.0.1", 80)
                 p443 = check_local_port("127.0.0.1", 443)
                 p3306 = check_local_port("127.0.0.1", 3306)
-                ports_data = {80: p80, 443: p443, 3306: p3306}
+                p5050 = check_local_port("127.0.0.1", DEFAULT_API_PORT)
+                ports_data = {80: p80, 443: p443, 3306: p3306, DEFAULT_API_PORT: p5050}
 
-                self.after(
-                    0,
+                self.enqueue_ui(
                     lambda: self._apply_refreshed_data(
                         new_services, metrics, configs, ports_data, initial, silent
                     )

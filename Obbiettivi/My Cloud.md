@@ -32,7 +32,7 @@ Il cloud non è un vero cloud remoto.
                     LAPTOP
 ┌──────────────────────────────────────────┐
 │                                          │
-│       Apache + PHP                      │
+│       Apache + PHP                       │
 │             │                            │
 │             ▼                            │
 │        ┌───────────┐                     │
@@ -464,7 +464,7 @@ V1 è volutamente single-user.
                │
        ┌───────┴───────┐
        ▼               ▼
-   MY CLOUD       MISSION CONTROL
+   MY CLOUD       OCCHIO DI FALCO
        │
        ▼
    tutti i propri file
@@ -583,7 +583,7 @@ MY CLOUD V1
 
 Queste possono essere idee per una V2, non requisiti della demo.
 
-23. 🧩 My Cloud + Mission Control
+23. 🧩 My Cloud + OcchioDiFalco
 
 E qui arriva la parte interessante: non sono due programmi separati.
 
@@ -593,8 +593,8 @@ Sono due moduli della stessa applicazione.
                  │    WEB APPLICATION    │
                  │                      │
                  │  ┌────────┐ ┌──────┐ │
-                 │  │MY CLOUD│ │MISSION│ │
-                 │  │        │ │CONTROL│ │
+                 │  │MY CLOUD│ │OCCHIO│ │
+                 │  │        │ │FALCO │ │
                  │  └───┬────┘ └───┬──┘ │
                  │      │           │    │
                  └──────┼───────────┼────┘
@@ -634,8 +634,8 @@ Alla fine, la macchina avrà questa logica:
                     ┌────────────┘       └─────────────┐
                     ▼                                  ▼
              ┌──────────────┐                  ┌──────────────┐
-             │   MY CLOUD   │                  │   MISSION    │
-             │              │                  │   CONTROL    │
+             │   MY CLOUD   │                  │  OCCHIO DI   │
+             │              │                  │    FALCO     │
              └──────┬───────┘                  └──────┬───────┘
                     │                                 │
              ┌──────┴──────┐                    ┌─────┴──────┐

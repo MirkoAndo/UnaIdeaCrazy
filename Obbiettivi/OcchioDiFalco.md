@@ -1,9 +1,9 @@
-🛰️ MISSION CONTROL — Specifica progettuale V1
+🦅 OCCHIO DI FALCO — Specifica progettuale V1
 
 L'idea complessiva è una web application locale che unisce due funzioni:
 <>
                          ┌───────────────────────┐
-                         │   MISSION CONTROL     │
+                         │   OCCHIO DI FALCO     │
                          │      WEB APP          │
                          └───────────┬───────────┘
                                      │
@@ -11,8 +11,8 @@ L'idea complessiva è una web application locale che unisce due funzioni:
                   │                                     │
                   ▼                                     ▼
           ┌───────────────┐                    ┌────────────────┐
-          │   MY CLOUD    │                    │    MISSION     │
-          │               │                    │    CONTROL     │
+          │   MY CLOUD    │                    │   OCCHIO DI    │
+          │               │                    │     FALCO      │
           └───────┬───────┘                    └───────┬────────┘
                   │                                    │
                   ▼                                    ▼
@@ -79,7 +79,7 @@ Autenticazione volutamente minimale:
                 │
          ┌──────┴──────┐
          ▼             ▼
-     MY CLOUD     MISSION CONTROL
+     MY CLOUD     OCCHIO DI FALCO
 Solo password
 Nessun username
 Una sola utenza
@@ -223,16 +223,16 @@ ha una durata scelta dall'utente
 non ha un limite di download
 non viene invalidato dopo il primo utilizzo
 
-Gli accessi al cloud non vengono registrati nel log eventi di Mission Control.
+Gli accessi al cloud non vengono registrati nel log eventi di OcchioDiFalco.
 
-6. 🎛️ MISSION CONTROL
+6. 🎛️ OCCHIO DI FALCO
 
 Questa è la parte più caratterizzante del progetto.
 
 La dashboard controlla l'infrastruttura reale del programma.
 
 ┌─────────────────────────────────────────────┐
-│              MISSION CONTROL                │
+│              OCCHIO DI FALCO                │
 ├─────────────────────────────────────────────┤
 │                                             │
 │  SERVICES                                   │
@@ -588,7 +588,7 @@ struttura/metadati dei file
 cartelle
 token dei link temporanei
 scadenze
-eventi Mission Control
+eventi OcchioDiFalco
 
 La struttura SQL precisa la definiamo in fase di implementazione.
 
@@ -708,7 +708,7 @@ Il progetto deve poter essere portato all'esame e fatto partire sul laptop senza
                        │
                        ▼
               ┌────────────────┐
-              │ MISSION CONTROL│
+              │ OCCHIO DI FALCO│
               └────────────────┘
                        │
               ┌────────┴────────┐
