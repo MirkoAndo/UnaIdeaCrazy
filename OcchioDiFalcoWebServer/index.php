@@ -62,6 +62,10 @@ $pmaDirExists       = is_dir(__DIR__ . DIRECTORY_SEPARATOR . 'phpmyadmin');
             </div>
         </div>
 
+        <div class="centered">
+            <h1>&ThickSpace; Mirko Andò 5C 2026</h1>
+        </div>
+
         <div class="status-pills">
             <div class="pill pill-online" title="Apache HTTP Server è attivo e sta servendo questa pagina">
                 <span class="dot dot-green"></span>
@@ -80,8 +84,7 @@ $pmaDirExists       = is_dir(__DIR__ . DIRECTORY_SEPARATOR . 'phpmyadmin');
                 </div>
             <?php endif; ?>
 
-            <div class="pill" title="Versione PHP caricata in Apache">
-                🐘 PHP <?= htmlspecialchars($phpVersion) ?>
+
             </div>
         </div>
     </header>
@@ -137,7 +140,7 @@ $pmaDirExists       = is_dir(__DIR__ . DIRECTORY_SEPARATOR . 'phpmyadmin');
                 <div class="card-footer">
                     <code class="route-code">/occhio-di-falco/</code>
                     <span class="btn-launch btn-blue">
-                        Apri Health Checker →
+                        Health Checker →
                     </span>
                 </div>
             </a>
@@ -221,7 +224,7 @@ $pmaDirExists       = is_dir(__DIR__ . DIRECTORY_SEPARATOR . 'phpmyadmin');
                 <div class="card-footer">
                     <code class="route-code">/discovery-server/</code>
                     <span class="btn-launch btn-purple">
-                        Esplora Siti Web →
+                        Discover sites →
                     </span>
                 </div>
             </a>

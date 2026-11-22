@@ -1,11 +1,13 @@
 # UnaIdeaCrazy – OcchioDiFalco
 
-Piattaforma locale per Windows che unisce una web application portabile e un pannello di controllo desktop interattivo (GUI):
+Piattaforma locale per Windows che unisce una **Web Application modulare a 3 servizi** e un **Pannello di Controllo Desktop interattivo (Python GUI + HTTP API Listener)**:
 
-- **My Cloud** – gestione di file sul file system locale.
-- **OcchioDiFalco** – monitoraggio dello stato in tempo reale, telemetria hardware, diagnostica porte TCP e orchestrazione dei servizi (**Apache**, **MySQL**, **PHP**, **Python**).
+1. **Server Health Checker (`/occhio-di-falco/`)** – monitoraggio web dello stato dei processi, telemetria hardware (CPU, RAM, Disco, Porte TCP) e registro eventi in comunicazione diretta con il listener Python.
+2. **My Cloud · File Server (`/my-cloud/`)** – file manager e cloud storage locale con navigazione cartelle, upload/download protetto da PHP e condivisione tramite link temporanei a scadenza.
+3. **Discovery Server (`/discovery-server/`)** – Web Server Provider che scansiona ed elenca automaticamente tutti i siti e i progetti web caricati all'interno della propria directory.
+4. **OcchioDiFalco Desktop GUI (`main.pyw` / `occhio_di_falco/`)** – orchestratore desktop (`tkinter`/`ttk`) a 4 schede con telemetria WMI/Win32, esecuzione script batch, scanner porte TCP e server HTTP listener (`127.0.0.1:5050`) con console live delle richieste client.
 
-Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come modulo DSO nativo in Apache), **MySQL Server 26.10.0** e un'applicazione desktop **Python GUI (`tkinter` / `ttk`)** modulare avviabile da `main.py`. Tutti i servizi sono eseguiti in modalità portabile, senza installazione di sistema, e sono raggiungibili esclusivamente da `localhost` (`127.0.0.1`).
+Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come modulo DSO nativo in Apache), **MySQL Server 26.10.0** e l'applicazione desktop **Python GUI (`tkinter` / `ttk`)** avviabile da `main.pyw`. Tutti i servizi sono eseguiti in modalità portabile, senza installazione di sistema, e sono raggiungibili esclusivamente da `localhost` (`127.0.0.1`).
 
 ---
 
@@ -14,12 +16,13 @@ Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come m
 1. [Requisiti e Download](#requisiti-e-download)
 2. [Struttura delle directory](#struttura-delle-directory)
 3. [Architettura Modulare Python (`occhio_di_falco`)](#architettura-modulare-python-occhio_di_falco)
-4. [Configurazione di Apache](#configurazione-di-apache)
-5. [Configurazione di PHP](#configurazione-di-php)
-6. [Configurazione di MySQL (`my.ini`)](#configurazione-di-mysql-myini)
-7. [Avvio dell'Applicazione GUI e Comandi](#avvio-dellapplicazione-gui-e-comandi)
-8. [Script batch (`CmdCommands`)](#script-batch-cmdcommands)
-9. [Note di sicurezza](#note-di-sicurezza)
+4. [Portale Web e I 3 Servizi (`OcchioDiFalcoWebServer`)](#portale-web-e-i-3-servizi-occhiodifalcowebserver)
+5. [Configurazione di Apache](#configurazione-di-apache)
+6. [Configurazione di PHP](#configurazione-di-php)
+7. [Configurazione di MySQL (`my.ini`)](#configurazione-di-mysql-myini)
+8. [Avvio dell'Applicazione GUI, Comandi e API Listener](#avvio-dellapplicazione-gui-comandi-e-api-listener)
+9. [Script batch (`CmdCommands`)](#script-batch-cmdcommands)
+10. [Note di sicurezza](#note-di-sicurezza)
 
 ---
 
@@ -27,13 +30,13 @@ Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come m
 
 | Componente | Versione | Link Download | Note |
 |---|---|---|---|
-| Windows | 10 / 11 x64 | - | Sistema operativo |
+| Windows | 10 / 11 x64 | - | Sistema operativo host |
 | Visual C++ Redistributable | 2015–2022 x64 | [Download VC++ x64](https://aka.ms/vs/17/release/vc_redist.x64.exe) | Richiesto da Apache, PHP e MySQL |
 | Apache HTTP Server | 2.4 (`Apache24`) | [Apache Lounge Downloads](https://www.apachelounge.com/download/) | Build Win64 (ZIP portabile) |
 | PHP | 8.5.x x64 (`php-8.5.12x64`) | [PHP for Windows](https://windows.php.net/download/) | Build **VS17 x64 Thread Safe (TS)**, necessaria per `php8apache2_4.dll` |
 | MySQL Server | 8.x / 26.x (`mysql-26.10.0`) | [MySQL Community Server](https://dev.mysql.com/downloads/mysql/) | Selezionare **Windows (x86, 64-bit), ZIP Archive** |
 | phpMyAdmin | 5.2.3 | [phpMyAdmin Downloads](https://www.phpmyadmin.net/downloads/) | Già presente in `OcchioDiFalcoWebServer/phpmyadmin` |
-| Python | 3.10+ | [Python Official Site](https://www.python.org/downloads/) | Include `tkinter`/`ttk` e `socket`; richiede `wmi` (`pip install wmi`) |
+| Python | 3.10+ | [Python Official Site](https://www.python.org/downloads/) | Include `tkinter`/`ttk`, `http.server` e `socket`; richiede `wmi` (`pip install wmi`) |
 
 > [!IMPORTANT]
 > La versione **Non Thread Safe (NTS)** di PHP **non** contiene `php8apache2_4.dll` e non può essere caricata come modulo nativo di Apache. Scaricare sempre la variante **Thread Safe (TS)**.
@@ -42,7 +45,7 @@ Lo stack è composto da **Apache HTTP Server 2.4**, **PHP 8.5** (caricato come m
 
 ## Struttura delle directory
 
-Il progetto presuppone che i servizi siano estratti in una cartella `Servizi_UnaIdeaCrazy`, posizionata allo stesso livello del repository `UnaIdeaCrazy`:
+Il progetto presuppone che i binari dei servizi siano estratti nella cartella `Servizi_UnaIdeaCrazy`, posizionata allo stesso livello del repository `UnaIdeaCrazy`:
 
 ```text
 GitHub/
@@ -63,33 +66,36 @@ GitHub/
 │       ├── php8apache2_4.dll           # Modulo nativo caricato da Apache
 │       └── php.ini                     # Configurazione PHP
 └── UnaIdeaCrazy/
-    ├── CmdCommands/                    # Script batch eseguiti dall'applicazione
-    │   ├── sv_apache.bat
-    │   ├── sv_mysql.bat
-    │   ├── stop_apache.bat
-    │   └── stop_mysql.bat
+    ├── CmdCommands/                    # Script batch eseguiti dall'applicazione Python
+    │   ├── sv_apache.bat               # Avvio Apache HTTP Server
+    │   ├── sv_mysql.bat                # Avvio MySQL Server
+    │   ├── stop_apache.bat             # Arresto Apache (con elevazione UAC automatica)
+    │   └── stop_mysql.bat              # Arresto MySQL (con elevazione UAC automatica)
     ├── OcchioDiFalcoWebServer/         # DocumentRoot di Apache (equivalente htdocs/)
-    │   ├── index.php
+    │   ├── index.php                   # Landing Page principale con accesso ai 3 servizi
     │   ├── style-root/
-    │   │   └── landing.css
+    │   │   └── landing.css             # Foglio di stile Dark/Slate della Landing Page
     │   ├── occhio-di-falco/            # Servizio #1: Server Health Checker
-    │   ├── my-cloud/                   # Servizio #2: My Cloud (File Server)
+    │   ├── my-cloud/                   # Servizio #2: My Cloud (File Server / FTP Web)
     │   ├── discovery-server/           # Servizio #3: Discovery Server (Web Server Provider)
-    │   └── phpmyadmin/
-    ├── occhio_di_falco/                # Pacchetto Python modulare (GUI, servizi e monitoraggio)
+    │   └── phpmyadmin/                 # phpMyAdmin 5.2.3 per amministrazione MySQL
+    ├── occhio_di_falco/                # Pacchetto Python modulare (GUI, servizi, monitoraggio, API)
     │   ├── __init__.py                 # Esportazione API del pacchetto
-    │   ├── config.py                   # Costanti, percorsi, CUSTOM_COMMANDS e lettura config reali
+    │   ├── config.py                   # Costanti, percorsi, porte API, CUSTOM_COMMANDS e parser config
     │   ├── services.py                 # Controllo processi WMI, stato servizi ed esecuzione .bat
     │   ├── monitoring.py               # Telemetria CPU/RAM (WMI/Win32) e scanner porte socket
     │   ├── styles.py                   # Palette colori (ThemeColors) e configurazione ttk.Style
     │   ├── tab_overview.py             # Tab 1: Card servizi (Apache, MySQL, Sistema) e tabella stato
     │   ├── tab_commands.py             # Tab 2: Console comandi custom, filtri e ispettore .bat
     │   ├── tab_monitor.py              # Tab 3: Scanner porte socket (80, 443, 3306, 5050) e albero stack
-    │   ├── tab_requests.py             # Tab 4: Listener richieste client (/occhio-di-falco/), script risposta e console
+    │   ├── tab_requests.py             # Tab 4: Listener HTTP (127.0.0.1:5050), script risposta e console
     │   └── app.py                      # Finestra principale OcchioDiFalcoGUI
-    ├── Obbiettivi/                     # Specifiche progettuali (OcchioDiFalco & My Cloud)
-    ├── main.py                         # Entrypoint principale dell'applicazione desktop GUI
-    ├── .env                            # Variabili locali (non versionato)
+    ├── Obbiettivi/                     # Documentazione architetturale e specifiche progettuali
+    │   ├── Architettura e Sviluppo 3 Servizi.md
+    │   ├── OcchioDiFalco.md
+    │   ├── My Cloud.md
+    │   └── qualcosa di davvero fottutissimamente mentalemente instabile.md
+    ├── main.pyw                        # Entrypoint principale dell'applicazione desktop GUI
     └── readme.md
 ```
 
@@ -97,20 +103,36 @@ GitHub/
 
 ## Architettura Modulare Python (`occhio_di_falco`)
 
-Il pannello di controllo desktop è progettato secondo una separazione netta delle responsabilità all'interno del pacchetto `occhio_di_falco/`, mantenendo `main.py` snello e leggibile:
+Il pannello di controllo desktop è progettato secondo una separazione netta delle responsabilità all'interno del pacchetto `occhio_di_falco/`, mantenendo `main.pyw` snello e leggibile:
 
 | Modulo | Responsabilità Principale |
 |---|---|
-| `main.py` | Entrypoint dell'applicazione: importa il pacchetto `occhio_di_falco`, espone le variabili di stato per retrocompatibilità e avvia `OcchioDiFalcoGUI`. |
-| `occhio_di_falco/config.py` | Definisce i percorsi base (`BASE_DIR`, `CMD_COMMANDS_DIR`, `WEB_SERVER_DIR`, `OBBIETTIVI_DIR`), i codici ANSI, `ASCII_logo_service`, `CUSTOM_COMMANDS` e il parser `read_real_service_configs()` per `env.conf` e `my.ini`. |
-| `occhio_di_falco/services.py` | Gestisce la rilevazione dei processi tramite WMI (`get_process_status` con fallback `tasklist`), la costruzione di `services_status`, l'esecuzione degli script `.bat` (`execute_batch_command`) e la generazione di `Occhio_di_falco_table`. |
-| `occhio_di_falco/monitoring.py` | Raccoglie le metriche hardware CPU e RAM (`get_system_metrics` tramite WMI e Win32 API) e verifica l'apertura delle porte locali TCP tramite libreria `socket` (`check_local_port`). |
-| `occhio_di_falco/styles.py` | Centralizza la palette cromatica (`ThemeColors`) e applica il tema scuro moderno a tutti i componenti `ttk`. |
-| `occhio_di_falco/tab_overview.py` | **Tab 1 – Panoramica & Dati `main.py`**: Card dedicate per **Apache HTTP Server**, **MySQL Database Server** e **Risorse & Hardware** con badge dinamici (`ONLINE`/`OFFLINE` + PID), pulsanti rapidi, tabella `services_status` filtrabile e anteprima live di `Occhio_di_falco_table`. |
+| `main.pyw` | Entrypoint dell'applicazione desktop (senza finestra console CMD residua): importa il pacchetto `occhio_di_falco`, espone le variabili di stato a livello di modulo e avvia `OcchioDiFalcoGUI`. |
+| `occhio_di_falco/config.py` | Definisce i percorsi base (`BASE_DIR`, `CMD_COMMANDS_DIR`, `WEB_SERVER_DIR`, `OBBIETTIVI_DIR`), l'endpoint del listener Python (`DEFAULT_API_HOST = "127.0.0.1"`, `DEFAULT_API_PORT = 5050`), i codici ANSI, `ASCII_logo_service`, `CUSTOM_COMMANDS` e il parser `read_real_service_configs()` per `env.conf` e `my.ini`. |
+| `occhio_di_falco/services.py` | Gestisce la rilevazione thread-safe dei processi tramite WMI (`get_process_status` con rilascio esplicito dei puntatori COM e fallback `tasklist`), la costruzione di `services_status`, l'esecuzione degli script `.bat` (`execute_batch_command`) e la generazione della tabella ASCII `format_occhio_di_falco_table()`. |
+| `occhio_di_falco/monitoring.py` | Raccoglie le metriche hardware CPU e RAM (`get_system_metrics` tramite struttura C `MEMORYSTATUSEX` di `kernel32` e classi WMI `Win32_Processor` / `Win32_OperatingSystem`) e verifica l'apertura e la latenza delle porte locali TCP tramite `socket` (`check_local_port`). |
+| `occhio_di_falco/styles.py` | Centralizza la palette cromatica (`ThemeColors`, tema Dark/Slate coordinato con il portale web) e configura tutti i widget `ttk` (`TNotebook`, `TButton`, `Treeview`, `TCombobox`, `TRadiobutton`, `TCheckbutton`, `Horizontal.TProgressbar`). |
+| `occhio_di_falco/tab_overview.py` | **Tab 1 – Panoramica & Dati `main.pyw`**: Card dedicate per **Apache HTTP Server**, **MySQL Database Server** e **Risorse & Hardware** con badge dinamici (`ONLINE`/`OFFLINE` + PID), pulsanti rapidi, tabella `services_status` filtrabile e anteprima live di `Occhio_di_falco_table`. |
 | `occhio_di_falco/tab_commands.py` | **Tab 2 – Comandi Custom & Script Batch**: Barra di esecuzione comandi interattiva, catalogo filtrabile di `CUSTOM_COMMANDS` e ispettore in sola lettura del codice sorgente dei file `.bat`. |
 | `occhio_di_falco/tab_monitor.py` | **Tab 3 – Monitor Porte & Struttura Servizi**: Scanner porte TCP locali (`127.0.0.1:80`, `127.0.0.1:443`, `127.0.0.1:3306`, `127.0.0.1:5050` + porta custom) tramite `socket` ed esploratore ad albero della gerarchia reale dello stack con anteprima dei file di configurazione. |
-| `occhio_di_falco/tab_requests.py` | **Tab 4 – Listener Richieste & Console Risposte**: Server HTTP locale (`127.0.0.1:5050`) che intercetta le richieste effettuate dai client web (es. `/occhio-di-falco/`), mostra la tabella delle richieste ricevute, lo script/payload JSON di risposta e la console live di ascolto e risposta. |
-| `occhio_di_falco/app.py` | Finestra principale `OcchioDiFalcoGUI`: coordina l'header, il `ttk.Notebook`, il pannello di log scorrevole `ScrolledText` in sola lettura, la barra di stato e il ciclo di auto-refresh asincrono. |
+| `occhio_di_falco/tab_requests.py` | **Tab 4 – Listener Richieste & Console Risposte**: Server HTTP multi-thread (`ReusableThreadingHTTPServer` su `127.0.0.1:5050`) che intercetta le richieste effettuate dai client web (es. `/occhio-di-falco/`), mostra la tabella delle richieste ricevute, l'ispettore a 3 viste dello script/payload di risposta e la console live socket. |
+| `occhio_di_falco/app.py` | Finestra principale `OcchioDiFalcoGUI`: coordina l'header, il `ttk.Notebook` a 4 schede, la coda thread-safe `_app_ui_queue` per l'aggiornamento UI, il pannello di log scorrevole `ScrolledText`, la barra di stato e il ciclo di auto-refresh asincrono. |
+
+---
+
+## Portale Web e I 3 Servizi (`OcchioDiFalcoWebServer`)
+
+La `DocumentRoot` di Apache (`OcchioDiFalcoWebServer/`) ospita la landing page principale e le directory dedicate ai 3 servizi web:
+
+- **`index.php` + `style-root/landing.css`**:
+  - Esegue un controllo istantaneo in PHP dello stato di Apache, della versione PHP/SAPI, del Sistema Operativo host e della raggiungibilità del socket MySQL (`127.0.0.1:3306` con timeout rapido a `150ms`).
+  - Verifica dinamicamente tramite `is_dir()` la presenza delle cartelle dei 3 servizi e presenta le rispettive card di accesso:
+    1. **Servizio #1 – Server Health Checker (`/occhio-di-falco/`)**: diagnostica hardware, stato processi e log eventi della macchina ospitante.
+    2. **Servizio #2 – My Cloud · File Server (`/my-cloud/`)**: archiviazione, organizzazione cartelle, upload/download protetto e condivisione file tramite link temporanei.
+    3. **Servizio #3 – Discovery Server (`/discovery-server/`)**: Web Server Provider che scansiona ed elenca tutti i siti web caricati nella propria directory per avviarli con un click.
+
+> [!TIP]
+> Per l'analisi teorica approfondita dell'architettura attuale e le specifiche di implementazione futura dei 3 servizi web, consultare il documento [Obbiettivi/Architettura e Sviluppo 3 Servizi.md](Obbiettivi/Architettura%20e%20Sviluppo%203%20Servizi.md).
 
 ---
 
@@ -310,26 +332,35 @@ cd ..\Servizi_UnaIdeaCrazy\mysql-26.10.0\bin
 
 ---
 
-## Avvio dell'Applicazione GUI e Comandi
+## Avvio dell'Applicazione GUI, Comandi e API Listener
 
 Per avviare l'applicazione desktop **OcchioDiFalco GUI**:
 
 ```powershell
 pip install wmi
-python main.py
+python main.pyw
 ```
+*(In alternativa è possibile fare doppio click direttamente su `main.pyw` da Esplora File di Windows per avviare la GUI senza finestra terminale).*
 
-### Funzionalità Principali dell'Interfaccia Grafica
+### Funzionalità Principali dell'Interfaccia Grafica (4 Tab)
 
-1. **Tab 1 – Panoramica & Dati `main.py`**:
+1. **Tab 1 – Panoramica & Dati `main.pyw`**:
    - **Card Apache HTTP Server** e **Card MySQL Database Server** con badge di stato in tempo reale (`●  ONLINE  ·  PID ...` / `●  OFFLINE  ·  PID —`), pulsanti rapidi di avvio/arresto (`▶ Avvia`, `⏹ Ferma`), apertura rapida nel browser (`🌐 Web` / `🗄️ Admin`) e apertura della cartella del servizio in Esplora File (`📂 File`).
    - **Card Risorse & Hardware** con barre di utilizzo **CPU %** e **RAM GB** aggiornate in background tramite WMI e Win32 API.
    - Tabella interattiva `services_status` con filtro di ricerca e ispettore dettagliato con anteprima di `Occhio_di_falco_table`.
 2. **Tab 2 – Comandi Custom & Script Batch**:
    - Console comandi interattiva (con menu a tendina e campo di input), filtro per servizio e visualizzatore del codice sorgente degli script `.bat` e delle variabili d'ambiente passate (`%1`, `SERVICE_POSITION`, `SERVICE_NAME`).
 3. **Tab 3 – Monitor Porte (`socket`) & Struttura Servizi**:
-   - Scanner di porte TCP locali tramite `socket` per `127.0.0.1:80` (Apache HTTP), `127.0.0.1:443` (Apache HTTPS) e `127.0.0.1:3306` (MySQL), oltre a un tester per porte personalizzate, con indicazione della latenza in millisecondi e del processo WMI associato.
+   - Scanner di porte TCP locali tramite `socket` per `127.0.0.1:80` (Apache HTTP), `127.0.0.1:443` (Apache HTTPS), `127.0.0.1:3306` (MySQL) e `127.0.0.1:5050` (OcchioDiFalco Python API Listener), oltre a un tester per porte personalizzate.
    - Albero gerarchico interattivo dell'intero stack (`UnaIdeaCrazy` e `Servizi_UnaIdeaCrazy`) con corrispondenza rispetto a un ambiente XAMPP tradizionale e anteprima integrata dei file di configurazione (`env.conf`, `httpd.conf`, `my.ini`, `php.ini`).
+4. **Tab 4 – Listener Richieste & Console Risposte**:
+   - **Controllo Listener HTTP (`127.0.0.1:5050`)**: avvio/arresto del server HTTP multi-thread integrato e simulatore di richieste client (`🧪 Simula Richiesta Client`).
+   - **Tabella Richieste Client**: intercetta e mostra in tempo reale tutte le richieste provenienti dal client web (es. da `http://127.0.0.1/occhio-di-falco/`), riportando `#ID`, `Orario`, `Metodo`, `Endpoint`, `Origine/Referer`, `Status HTTP`, `Latenza (ms)` e `Dimensione Payload`.
+   - **Ispettore Script di Risposta (3 Viste)**:
+     - *Payload JSON Risposta*: header HTTP della richiesta e JSON completo restituito al client.
+     - *Script Python Handler*: codice sorgente del costruttore del payload in Python.
+     - *Script Client PHP/JS*: snippet di integrazione PHP e JavaScript (`fetch`) per `/occhio-di-falco/`.
+   - **Console Listener Live**: terminale dedicato che mostra in diretta i log di ascolto socket (`[LISTEN]`), le richieste in ingresso (`[REQ <<]`) e le risposte inviate (`[RES >>]`).
 
 ### Comandi Custom Supportati
 
@@ -340,14 +371,21 @@ python main.py
 | `sv mysql` | Pulsante `▶ Avvia` (Card MySQL) | Esegue `CmdCommands\sv_mysql.bat` |
 | `stop apache` | Pulsante `⏹ Ferma` (Card Apache) | Esegue `CmdCommands\stop_apache.bat` |
 | `stop mysql` | Pulsante `⏹ Ferma` (Card MySQL) | Esegue `CmdCommands\stop_mysql.bat` |
-| `exit` / `quit` | Chiusura finestra / Console Tab 2 | Chiude l'applicazione OcchioDiFalco GUI |
+| `exit` / `quit` | Chiusura finestra / Console Tab 2 | Arresta il listener HTTP e chiude OcchioDiFalco GUI |
 
-### URL delle risorse Web
+### URL delle Risorse Web e Endpoint API Locali
 
-| Risorsa | URL |
-|---|---|
-| OcchioDiFalco Web App | <http://127.0.0.1/> |
-| phpMyAdmin | <http://127.0.0.1/phpmyadmin/> |
+| Risorsa / Servizio | URL Locale | Descrizione |
+|---|---|---|
+| **Landing Page Portale** | <http://127.0.0.1/> | Pagina iniziale con stato rapido e accesso ai 3 servizi |
+| **Servizio #1 – Server Health Checker** | <http://127.0.0.1/occhio-di-falco/> | Dashboard web telemetria hardware, processi ed eventi |
+| **Servizio #2 – My Cloud (File Server)** | <http://127.0.0.1/my-cloud/> | File manager locale, upload/download e link temporanei |
+| **Servizio #3 – Discovery Server** | <http://127.0.0.1/discovery-server/> | Web Server Provider con catalogo automatico dei siti ospitati |
+| **phpMyAdmin** | <http://127.0.0.1/phpmyadmin/> | Amministrazione database MySQL (`127.0.0.1:3306`) |
+| **API Python – Health & Telemetria** | <http://127.0.0.1:5050/api/health> | JSON completo: CPU, RAM, Disco, Servizi WMI e Porte TCP |
+| **API Python – Stato Servizi** | <http://127.0.0.1:5050/api/services> | JSON con stato e PID di Apache, MySQL, PHP e OcchioDiFalco |
+| **API Python – Stato Porte** | <http://127.0.0.1:5050/api/ports> | JSON con stato socket e latenza porte `80`, `443`, `3306`, `5050` |
+| **API Python – Esecuzione Comandi** | `http://127.0.0.1:5050/api/command?cmd=...` | Esecuzione remota locale dei comandi di `CUSTOM_COMMANDS` |
 
 ---
 
@@ -366,8 +404,8 @@ I comandi di avvio e stop richiamano gli script `.bat` situati nella cartella `C
 
 ## Note di sicurezza
 
-- Apache è in ascolto **esclusivamente** su `127.0.0.1`: il server non è raggiungibile da altri host della rete locale o esterna.
-- L'accesso al file system è negato di default (`<Directory />` → `Require all denied`); è consentita solo la `DocumentRoot`.
+- Apache e il Listener Python sono in ascolto **esclusivamente** su `127.0.0.1`: i servizi non sono esposti ad altri host della rete locale o esterna.
+- L'accesso al file system da Apache è negato di default (`<Directory />` → `Require all denied`); è consentita solo la `DocumentRoot` (`OcchioDiFalcoWebServer`).
 - I file `.ht*` non sono serviti al client.
 - `env.conf` e `.env` contengono configurazioni locali e **non** devono essere versionati.
 - Con `mysqld --initialize-insecure` l'utente `root` non ha password: impostarne una prima di qualsiasi utilizzo non strettamente locale.
